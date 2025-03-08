@@ -39,8 +39,10 @@ var (
 
 const (
 	TestKeysSetName    = "test-set"
+	TestKeysZSetName   = "test-zset"
 	TestKeysStreamName = "test-stream"
 	TestKeysHllName    = "test-hll"
+	TestKeysHashName   = "test-hash"
 )
 
 func getTestExporter() *Exporter {
@@ -68,8 +70,8 @@ func getTestExporterWithAddrAndOptions(addr string, opt Options) *Exporter {
 
 func setupKeys(t *testing.T, c redis.Conn, dbNumStr string) error {
 	if _, err := c.Do("SELECT", dbNumStr); err != nil {
-		log.Printf("setupDBKeys() - couldn't setup redis, err: %s ", err)
 		// not failing on this one - cluster doesn't allow for SELECT so we log and ignore the error
+		log.Printf("setupDBKeys() - couldn't setup redis, err: %s ", err)
 	}
 
 	testValue := 1234.56
@@ -80,9 +82,9 @@ func setupKeys(t *testing.T, c redis.Conn, dbNumStr string) error {
 		}
 	}
 
-	// set to expire in 300 seconds, should be plenty for a test run
+	// set to expire in 600 seconds, should be plenty for a test run
 	for _, key := range keysExpiring {
-		if _, err := c.Do("SETEX", key, "300", testValue); err != nil {
+		if _, err := c.Do("SETEX", key, "600", testValue); err != nil {
 			t.Errorf("couldn't setup redis, err: %s ", err)
 			return err
 		}
@@ -119,8 +121,38 @@ func setupKeys(t *testing.T, c redis.Conn, dbNumStr string) error {
 		return err
 	}
 
+	if _, err := c.Do("ZADD", TestKeysZSetName, "12", "test-zzzval-1"); err != nil {
+		t.Errorf("ZADD err: %s", err)
+		return err
+	}
+	if _, err := c.Do("ZADD", TestKeysZSetName, "23", "test-zzzval-2"); err != nil {
+		t.Errorf("ZADD err: %s", err)
+		return err
+	}
+	if _, err := c.Do("ZADD", TestKeysZSetName, "45", "test-zzzval-3"); err != nil {
+		t.Errorf("ZADD err: %s", err)
+		return err
+	}
+
 	if _, err := c.Do("SET", singleStringKey, "this-is-a-string"); err != nil {
-		t.Errorf("PFADD err: %s", err)
+		t.Errorf("SET %s err: %s", singleStringKey, err)
+		return err
+	}
+
+	if _, err := c.Do("HSET", TestKeysHashName, "field1", "Hello"); err != nil {
+		t.Errorf("HSET err: %s", err)
+		return err
+	}
+	if _, err := c.Do("HSET", TestKeysHashName, "field2", "World"); err != nil {
+		t.Errorf("HSET err: %s", err)
+		return err
+	}
+	if _, err := c.Do("HSET", TestKeysHashName, "field3", "What's"); err != nil {
+		t.Errorf("HSET err: %s", err)
+		return err
+	}
+	if _, err := c.Do("HSET", TestKeysHashName, "field4", "new?"); err != nil {
+		t.Errorf("HSET err: %s", err)
 		return err
 	}
 
@@ -204,6 +236,8 @@ func deleteKeys(c redis.Conn, dbNumStr string) {
 
 	c.Do("DEL", TestKeysHllName)
 	c.Do("DEL", TestKeysSetName)
+	c.Do("DEL", TestKeysZSetName)
+	c.Do("DEL", TestKeysHashName)
 	c.Do("DEL", TestKeysStreamName)
 	c.Do("DEL", singleStringKey)
 
@@ -216,6 +250,7 @@ func deleteKeys(c redis.Conn, dbNumStr string) {
 	}
 	c.Do("DEL", TestKeysHllName)
 	c.Do("DEL", TestKeysSetName)
+	c.Do("DEL", TestKeysZSetName)
 	c.Do("DEL", TestKeysStreamName)
 	c.Do("DEL", singleStringKey)
 
@@ -240,7 +275,7 @@ func setupDBKeys(t *testing.T, uri string) {
 	defer c.Close()
 
 	if err = setupKeys(t, c, dbNumStr); err != nil {
-		t.Fatalf("couldn't setup redis, err: %s ", err)
+		t.Fatalf("couldn't setup test keys, err: %s ", err)
 	}
 }
 

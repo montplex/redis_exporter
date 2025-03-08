@@ -97,7 +97,7 @@ func TestKeyGroupMetrics(t *testing.T) {
 				keys[3]:    true,
 				"overflow": true, "test-hll": true, "test-stream": true,
 			},
-			wantedDistintKeyGroups: 14,
+			wantedDistintKeyGroups: 16,
 		},
 	}
 
