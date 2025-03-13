@@ -722,7 +722,7 @@ func TestClusterGetKeyInfo(t *testing.T) {
 			CheckSingleKeys: TestKeysHllName + "," +
 				dbNumStr + "=" + url.QueryEscape(singleStringKey),
 			Registry:           prometheus.NewRegistry(),
-			CheckKeys:          dbNumStr + "=" + "test*",
+			CheckKeys:          "test*",
 			CheckKeysBatchSize: 1000,
 			IsCluster:          true,
 		},

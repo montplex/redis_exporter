@@ -68,8 +68,8 @@ func getTestExporterWithAddrAndOptions(addr string, opt Options) *Exporter {
 	return e
 }
 
-func setupKeys(t *testing.T, c redis.Conn, dbNumStr string) error {
-	if _, err := c.Do("SELECT", dbNumStr); err != nil {
+func setupKeys(t *testing.T, c redis.Conn, dbNum string) error {
+	if _, err := c.Do("SELECT", dbNum); err != nil {
 		// not failing on this one - cluster doesn't allow for SELECT so we log and ignore the error
 		log.Printf("setupDBKeys() - couldn't setup redis, err: %s ", err)
 	}
@@ -274,7 +274,7 @@ func setupDBKeys(t *testing.T, uri string) {
 	}
 	defer c.Close()
 
-	if err = setupKeys(t, c, dbNumStr); err != nil {
+	if err := setupKeys(t, c, dbNumStr); err != nil {
 		t.Fatalf("couldn't setup test keys, err: %s ", err)
 	}
 }
@@ -289,8 +289,8 @@ func setupDBKeysCluster(t *testing.T, uri string) {
 
 	defer c.Close()
 
-	if err = setupKeys(t, c, "0"); err != nil {
-		t.Fatalf("couldn't setup redis, err: %s ", err)
+	if err := setupKeys(t, c, "0"); err != nil {
+		t.Fatalf("couldn't setup test keys, err: %s ", err)
 		return
 	}
 }
