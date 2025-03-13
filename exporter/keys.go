@@ -15,7 +15,6 @@ import (
 type dbKeyPair struct {
 	db  string
 	key string
-	// t   string
 }
 
 type keyInfo struct {
@@ -104,7 +103,6 @@ func (e *Exporter) getKeyInfo(ch chan<- prometheus.Metric, c redis.Conn, dbLabel
 			// if it's not float-y then we'll record the value as a string label
 			e.registerConstMetricGauge(ch, "key_value_as_string", 1.0, dbLabel, keyName, info.strVal)
 		}
-
 	}
 }
 
@@ -180,7 +178,7 @@ func (e *Exporter) extractCheckKeyMetricsPipelined(ch chan<- prometheus.Metric, 
 		}
 		/*
 			first pipeline (batch) all the TYPE & MEMORY USAGE calls and ship them to the redis instance
-			everything else is dependent on the type
+			everything else is dependent on the TYPE of the key
 		*/
 
 		for _, keyName := range arrayOfKeys {
@@ -202,13 +200,14 @@ func (e *Exporter) extractCheckKeyMetricsPipelined(ch chan<- prometheus.Metric, 
 			return
 		}
 
+		// throwaway Receive() call for the response of the SELECT() call
 		if _, err := redis.String(c.Receive()); err != nil {
 			log.Errorf("Receive() err: %s", err)
 			continue
 		}
 
 		/*
-			populate "keyTypes" with the batched responses from the redis instance
+			populate "keyTypes" with the batched TYPE responses from the redis instance
 			and collect MEMORY USAGE responses and immediately emmit that metric
 		*/
 		keyTypes := make([]string, len(arrayOfKeys))

@@ -718,9 +718,8 @@ func TestClusterGetKeyInfo(t *testing.T) {
 	e, _ := NewRedisExporter(
 		clusterUri,
 		Options{
-			Namespace: "test",
-			CheckSingleKeys: TestKeysHllName + "," +
-				dbNumStr + "=" + url.QueryEscape(singleStringKey),
+			Namespace:          "test",
+			CheckSingleKeys:    TestKeysHllName + "," + url.QueryEscape(singleStringKey) + ",hello",
 			Registry:           prometheus.NewRegistry(),
 			CheckKeys:          "test*",
 			CheckKeysBatchSize: 1000,
