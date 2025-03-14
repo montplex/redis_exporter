@@ -770,5 +770,7 @@ func (e *Exporter) scrapeRedisHost(ch chan<- prometheus.Metric) error {
 		}
 	}
 
+	e.extractEngulaMetrics(ch, c)
+
 	return nil
 }
