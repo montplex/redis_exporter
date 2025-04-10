@@ -99,6 +99,7 @@ func main() {
 		excludeLatencyHistogramMetrics = flag.Bool("exclude-latency-histogram-metrics", getEnvBool("REDIS_EXPORTER_EXCLUDE_LATENCY_HISTOGRAM_METRICS", false), "Do not try to collect latency histogram metrics")
 		redactConfigMetrics            = flag.Bool("redact-config-metrics", getEnvBool("REDIS_EXPORTER_REDACT_CONFIG_METRICS", true), "Whether to redact config settings that include potentially sensitive information like passwords")
 		inclSystemMetrics              = flag.Bool("include-system-metrics", getEnvBool("REDIS_EXPORTER_INCL_SYSTEM_METRICS", false), "Whether to include system metrics like e.g. redis_total_system_memory_bytes")
+		inclEngulaMetrics              = flag.Bool("include-engula-metrics", getEnvBool("REDIS_EXPORTER_INCL_ENGULA_METRICS", true), "Whether to include Engula metrics")
 		skipTLSVerification            = flag.Bool("skip-tls-verification", getEnvBool("REDIS_EXPORTER_SKIP_TLS_VERIFICATION", false), "Whether to to skip TLS verification")
 		basicAuthUsername              = flag.String("basic-auth-username", getEnv("REDIS_EXPORTER_BASIC_AUTH_USERNAME", ""), "Username for basic authentication")
 		basicAuthPassword              = flag.String("basic-auth-password", getEnv("REDIS_EXPORTER_BASIC_AUTH_PASSWORD", ""), "Password for basic authentication")
@@ -178,6 +179,7 @@ func main() {
 			CountKeys:                      *countKeys,
 			LuaScript:                      ls,
 			InclSystemMetrics:              *inclSystemMetrics,
+			InclEngulaMetrics:              *inclEngulaMetrics,
 			InclConfigMetrics:              *inclConfigMetrics,
 			DisableExportingKeyValues:      *disableExportingKeyValues,
 			ExcludeLatencyHistogramMetrics: *excludeLatencyHistogramMetrics,

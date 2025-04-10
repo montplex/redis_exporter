@@ -70,6 +70,7 @@ type Options struct {
 	ExcludeLatencyHistogramMetrics bool
 	RedactConfigMetrics            bool
 	InclSystemMetrics              bool
+	InclEngulaMetrics              bool
 	SkipTLSVerification            bool
 	SetClientName                  bool
 	IsTile38                       bool
@@ -401,6 +402,9 @@ func NewRedisExporter(uri string, opts Options) (*Exporter, error) {
 
 	if opts.InclSystemMetrics {
 		e.metricMapGauges["total_system_memory"] = "total_system_memory_bytes"
+	}
+	if opts.InclEngulaMetrics {
+		e.registEngulaMetrics()
 	}
 
 	e.metricDescriptions = map[string]*prometheus.Desc{}
@@ -770,7 +774,9 @@ func (e *Exporter) scrapeRedisHost(ch chan<- prometheus.Metric) error {
 		}
 	}
 
-	e.extractEngulaMetrics(ch, c)
+	if e.options.InclEngulaMetrics {
+		e.extractEngulaMetrics(ch, c)
+	}
 
 	return nil
 }
