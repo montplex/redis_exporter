@@ -1222,7 +1222,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_dict_nsize_bucket3_dicts{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "40%",
@@ -1236,7 +1236,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_dict_nsize_bucket4_dicts{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "50%",
@@ -1724,13 +1724,13 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Engula Overview",
   "uid": "deq0dsu4jr400d",
-  "version": 10,
+  "version": 11,
   "weekStart": ""
 }
