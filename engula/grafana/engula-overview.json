@@ -279,15 +279,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "redis_earena_blocks{instance=\"$instance\"}",
           "legendFormat": "accumulated, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -390,15 +390,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "rate(redis_earena_block_size_bytes_total{instance=\"$instance\"}[1m])",
           "legendFormat": "new, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         }
       ],
       "title": "Memory Block Writes",
@@ -488,15 +488,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "rate(redis_ea_alloc_records_total[1m])",
           "legendFormat": "allocate, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -637,17 +637,17 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "exemplar": false,
           "expr": "redis_defrag_fill_rate_bucket0_blocks{instance=\"$instance\"}",
           "instant": true,
           "legendFormat": "<30%",
           "range": false,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -825,6 +825,7 @@
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -865,15 +866,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "redis_earena_block_size_bytes/redis_earena_blocks{instance=\"$instance\"}",
           "legendFormat": "avg, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         }
       ],
       "title": "Block Size",
@@ -938,7 +939,32 @@
           },
           "unit": "ops"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "created, 172.17.0.1:9121"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -963,15 +989,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "rate(redis_defrag_task_create_requests_total{instance=\"$instance\"}[1m])",
           "legendFormat": "requests, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -1074,15 +1100,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "rate(redis_defrag_completion_old_blocks_total{instance=\"$instance\"}[1m])/rate(redis_defrag_task_create_succ_total{instance=\"$instance\"}[1m])",
           "legendFormat": "before, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -1111,7 +1137,7 @@
       },
       "id": 15,
       "panels": [],
-      "title": "Arena Compress",
+      "title": "Arena Compression",
       "type": "row"
     },
     {
@@ -1171,6 +1197,10 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
@@ -1181,11 +1211,7 @@
           "legendFormat": "10%",
           "range": false,
           "refId": "A",
-          "useBackend": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "useBackend": false
         },
         {
           "datasource": {
@@ -1401,15 +1427,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "rate(redis_ec_zip_completion_old_block_size_bytes_total{instance=\"$instance\"}[1m])",
           "legendFormat": "compress_old_bytes, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -1537,15 +1563,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "redis_ec_dicts{instance=\"$instance\"}",
           "legendFormat": "counts, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         }
       ],
       "title": "Compress Dictionary",
@@ -1634,15 +1660,15 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "rate(redis_ec_zip_completion_old_blocks_total{instance=\"$instance\"}[1m])",
           "legendFormat": "compress_old_blocks, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -1724,13 +1750,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Engula Overview",
   "uid": "deq0dsu4jr400d",
-  "version": 11,
+  "version": 4,
   "weekStart": ""
 }

@@ -110,6 +110,26 @@ func (e *Exporter) registEngulaMetrics() {
 	e.metricMapCounters["ec_rezip_completion_new_records_total"] = "ec_rezip_completion_new_records_total"
 	e.metricMapCounters["ec_rezip_completion_new_record_size_bytes_total"] = "ec_rezip_completion_new_record_size_bytes_total"
 
+	// EArena.Defragmation.Extra
+	e.metricMapGauges["defrag_zmalloc_mem_used_bytes"] = "defrag_zmalloc_mem_used_bytes"
+	e.metricMapGauges["defrag_overhead_bytes"] = "defrag_overhead_bytes"
+	e.metricMapGauges["defrag_logic_mem_used_bytes"] = "defrag_logic_mem_used_bytes"
+	e.metricMapGauges["defrag_mem_tofree_bytes"] = "defrag_mem_tofree_bytes"
+	e.metricMapGauges["defrag_mutable_blocks_size_bytes"] = "defrag_mutable_blocks_size_bytes"
+	e.metricMapGauges["defrag_immutable_blocks_size_bytes"] = "defrag_immutable_blocks_size_bytes"
+	e.metricMapGauges["defrag_recyclable_space_bytes"] = "defrag_recyclable_space_bytes"
+
+	e.metricMapCounters["defrag_triggered_by_cron_total"] = "defrag_triggered_by_cron_total"
+	e.metricMapCounters["defrag_triggered_by_free_total"] = "defrag_triggered_by_free_total"
+	e.metricMapCounters["defrag_triggered_by_blind_update_total"] = "defrag_triggered_by_blind_update_total"
+	e.metricMapCounters["ea_que_defrag_send_reqs_total"] = "ea_que_defrag_send_reqs_total"
+	e.metricMapCounters["ea_que_defrag_direct_reqs_total"] = "ea_que_defrag_direct_reqs_total"
+
+	// EArena.Evict
+	e.metricMapGauges["evict_timer_status"] = "evict_timer_status"
+	e.metricMapCounters["evict_timer_start_total"] = "evict_timer_start_total"
+	e.metricMapCounters["evict_defrag_triggered_by_evict_timer_total"] = "evict_defrag_triggered_by_evict_timer_total"
+	e.metricMapCounters["evict_defrag_triggered_by_evict_func_total"] = "evict_defrag_triggered_by_evict_func_total"
 }
 
 func (e *Exporter) extractEngulaMetrics(ch chan<- prometheus.Metric, c redis.Conn) {
