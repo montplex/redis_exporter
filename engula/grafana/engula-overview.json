@@ -939,32 +939,7 @@
           },
           "unit": "ops"
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "created, 172.17.0.1:9121"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1204,7 +1179,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket0_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket0{instance=\"$instance\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": true,
@@ -1220,7 +1195,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket1_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket1{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "20%",
@@ -1234,7 +1209,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket2_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket2{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "30%",
@@ -1248,7 +1223,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket3_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket3{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "40%",
@@ -1262,7 +1237,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket4_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket4{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "50%",
@@ -1276,7 +1251,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket5_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket5{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "60%",
@@ -1290,7 +1265,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket6_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket6{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "70%",
@@ -1304,7 +1279,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket7_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket7{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "80%",
@@ -1318,7 +1293,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket8_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket8{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "90%",
@@ -1332,7 +1307,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_dict_nsize_bucket9_dicts{instance=\"$instance\"}",
+          "expr": "redis_ec_lines_nsize_bucket9{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "100%",
@@ -1340,7 +1315,7 @@
           "refId": "J"
         }
       ],
-      "title": "Number of Dictionary",
+      "title": "Number of Compress Lines",
       "type": "bargauge"
     },
     {
@@ -1750,13 +1725,13 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Engula Overview",
   "uid": "deq0dsu4jr400d",
-  "version": 4,
+  "version": 6,
   "weekStart": ""
 }
