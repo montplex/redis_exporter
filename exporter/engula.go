@@ -23,9 +23,10 @@ func (e *Exporter) registEngulaMetrics() {
 
 	e.metricMapCounters["ea_que_defrag_req_sends_total"] = "ea_que_defrag_req_sends_total"
 	e.metricMapCounters["ea_que_defrag_completions_total"] = "ea_que_defrag_completions_total"
+	e.metricMapCounters["ea_que_defrag_direct_reqs_total"] = "ea_que_defrag_direct_reqs_total"
 	e.metricMapCounters["ea_que_zip_req_sents_total"] = "ea_que_zip_req_sents_total"
-	e.metricMapCounters["ea_que_zip_req_main_thread_total"] = "ea_que_zip_req_main_thread_total"
 	e.metricMapCounters["ea_que_zip_completions_total"] = "ea_que_zip_completions_total"
+	e.metricMapCounters["ea_que_zip_direct_reqs_total"] = "ea_que_zip_direct_reqs_total"
 	e.metricMapCounters["ea_que_rezip_req_sents_total"] = "ea_que_rezip_req_sents_total"
 	e.metricMapCounters["ea_que_rezip_completions_total"] = "ea_que_rezip_completions_total"
 
@@ -125,13 +126,30 @@ func (e *Exporter) registEngulaMetrics() {
 	e.metricMapCounters["defrag_triggered_by_free_total"] = "defrag_triggered_by_free_total"
 	e.metricMapCounters["defrag_triggered_by_blind_update_total"] = "defrag_triggered_by_blind_update_total"
 	e.metricMapCounters["ea_que_defrag_send_reqs_total"] = "ea_que_defrag_send_reqs_total"
-	e.metricMapCounters["ea_que_defrag_direct_reqs_total"] = "ea_que_defrag_direct_reqs_total"
 
 	// EArena.Evict
 	e.metricMapGauges["evict_timer_status"] = "evict_timer_status"
 	e.metricMapCounters["evict_timer_start_total"] = "evict_timer_start_total"
 	e.metricMapCounters["evict_defrag_triggered_by_evict_timer_total"] = "evict_defrag_triggered_by_evict_timer_total"
 	e.metricMapCounters["evict_defrag_triggered_by_evict_func_total"] = "evict_defrag_triggered_by_evict_func_total"
+
+	// Engula.Coroutine
+	e.metricMapGauges["main_thread_busy_level"] = "main_thread_busy_level"
+	e.metricMapGauges["zip_req_que_size"] = "zip_req_que_size"
+	e.metricMapGauges["rezip_req_que_size"] = "rezip_req_que_size"
+	e.metricMapGauges["defrag_req_que_size"] = "defrag_req_que_size"
+	e.metricMapGauges["completion_que_size"] = "completion_que_size"
+
+	e.metricMapCounters["ae_co_requests_total"] = "ae_co_requests_total"
+	e.metricMapCounters["ae_co_duration_useconds_total"] = "ae_co_duration_useconds_total"
+	e.metricMapGauges["ae_co_duration_useconds_max"] = "ae_co_duration_useconds_max"
+
+	e.metricMapCounters["zip_requests_total"] = "zip_requests_total"
+	e.metricMapCounters["zip_requests_by_main_thread_total"] = "zip_requests_by_main_thread_total"
+	e.metricMapCounters["rezip_requests_total"] = "rezip_requests_total"
+	e.metricMapCounters["rezip_requests_by_main_thread_total"] = "rezip_requests_by_main_thread_total"
+	e.metricMapCounters["defrag_requests_total"] = "defrag_requests_total"
+	e.metricMapCounters["defrag_requests_by_main_thread_total"] = "defrag_requests_by_main_thread_total"
 }
 
 func (e *Exporter) extractEngulaMetrics(ch chan<- prometheus.Metric, c redis.Conn) {
