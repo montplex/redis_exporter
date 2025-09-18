@@ -134,22 +134,30 @@ func (e *Exporter) registEngulaMetrics() {
 	e.metricMapCounters["evict_defrag_triggered_by_evict_func_total"] = "evict_defrag_triggered_by_evict_func_total"
 
 	// Engula.Coroutine
-	e.metricMapGauges["main_thread_busy_level"] = "main_thread_busy_level"
-	e.metricMapGauges["zip_req_que_size"] = "zip_req_que_size"
-	e.metricMapGauges["rezip_req_que_size"] = "rezip_req_que_size"
-	e.metricMapGauges["defrag_req_que_size"] = "defrag_req_que_size"
-	e.metricMapGauges["completion_que_size"] = "completion_que_size"
+	e.metricMapGauges["coro_main_thread_busy_level"] = "coro_main_thread_busy_level"
+	e.metricMapGauges["coro_zip_req_que_size"] = "coro_zip_req_que_size"
+	e.metricMapGauges["coro_rezip_req_que_size"] = "coro_rezip_req_que_size"
+	e.metricMapGauges["coro_defrag_req_que_size"] = "coro_defrag_req_que_size"
+	e.metricMapGauges["coro_completion_que_size"] = "coro_completion_que_size"
 
-	e.metricMapCounters["ae_co_requests_total"] = "ae_co_requests_total"
-	e.metricMapCounters["ae_co_duration_useconds_total"] = "ae_co_duration_useconds_total"
-	e.metricMapGauges["ae_co_duration_useconds_max"] = "ae_co_duration_useconds_max"
+	e.metricMapCounters["coro_schedule_total"] = "coro_schedule_total"
+	e.metricMapCounters["coro_schedule_soft_limit_useconds_total"] = "coro_schedule_soft_limit_useconds_total"
+	e.metricMapCounters["coro_schedule_hard_limit_useconds_total"] = "coro_schedule_hard_limit_useconds_total"
+	e.metricMapCounters["coro_schedule_plan_useconds_total"] = "coro_schedule_plan_useconds_total"
+	e.metricMapCounters["coro_schedule_real_useconds_total"] = "coro_schedule_real_useconds_total"
 
-	e.metricMapCounters["zip_requests_total"] = "zip_requests_total"
-	e.metricMapCounters["zip_requests_by_main_thread_total"] = "zip_requests_by_main_thread_total"
-	e.metricMapCounters["rezip_requests_total"] = "rezip_requests_total"
-	e.metricMapCounters["rezip_requests_by_main_thread_total"] = "rezip_requests_by_main_thread_total"
-	e.metricMapCounters["defrag_requests_total"] = "defrag_requests_total"
-	e.metricMapCounters["defrag_requests_by_main_thread_total"] = "defrag_requests_by_main_thread_total"
+	e.metricMapCounters["coro_zip_requests_total"] = "coro_zip_requests_total"
+	e.metricMapCounters["coro_zip_requests_by_main_thread_total"] = "coro_zip_requests_by_main_thread_total"
+	e.metricMapCounters["coro_rezip_requests_total"] = "coro_rezip_requests_total"
+	e.metricMapCounters["coro_rezip_requests_by_main_thread_total"] = "coro_rezip_requests_by_main_thread_total"
+	e.metricMapCounters["coro_defrag_requests_total"] = "coro_defrag_requests_total"
+	e.metricMapCounters["coro_defrag_requests_by_main_thread_total"] = "coro_defrag_requests_by_main_thread_total"
+
+	e.metricMapCounters["coro_main_thread_busy_level_useconds_total0"] = "coro_main_thread_busy_level_useconds_total0"
+	e.metricMapCounters["coro_main_thread_busy_level_useconds_total1"] = "coro_main_thread_busy_level_useconds_total1"
+	e.metricMapCounters["coro_main_thread_busy_level_useconds_total2"] = "coro_main_thread_busy_level_useconds_total2"
+	e.metricMapCounters["coro_main_thread_busy_level_useconds_total3"] = "coro_main_thread_busy_level_useconds_total3"
+	e.metricMapCounters["coro_main_thread_busy_level_useconds_total4"] = "coro_main_thread_busy_level_useconds_total4"
 }
 
 func (e *Exporter) extractEngulaMetrics(ch chan<- prometheus.Metric, c redis.Conn) {
