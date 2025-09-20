@@ -21,14 +21,24 @@ func (e *Exporter) registEngulaMetrics() {
 	e.metricMapCounters["ea_blind_update_total"] = "ea_blind_update_total"
 	e.metricMapCounters["ea_rmw_update_total"] = "ea_rmw_update_total"
 
-	e.metricMapCounters["ea_que_defrag_req_sends_total"] = "ea_que_defrag_req_sends_total"
-	e.metricMapCounters["ea_que_defrag_completions_total"] = "ea_que_defrag_completions_total"
-	e.metricMapCounters["ea_que_defrag_direct_reqs_total"] = "ea_que_defrag_direct_reqs_total"
-	e.metricMapCounters["ea_que_zip_req_sents_total"] = "ea_que_zip_req_sents_total"
-	e.metricMapCounters["ea_que_zip_completions_total"] = "ea_que_zip_completions_total"
-	e.metricMapCounters["ea_que_zip_direct_reqs_total"] = "ea_que_zip_direct_reqs_total"
-	e.metricMapCounters["ea_que_rezip_req_sents_total"] = "ea_que_rezip_req_sents_total"
-	e.metricMapCounters["ea_que_rezip_completions_total"] = "ea_que_rezip_completions_total"
+	e.metricMapGauges["ea_que_defrag_reqs_queue_size"] = "ea_que_defrag_reqs_queue_size"
+	e.metricMapCounters["ea_que_defrag_reqs_send_total"] = "ea_que_defrag_reqs_send_total"
+	e.metricMapCounters["ea_que_defrag_completions_recv_total"] = "ea_que_defrag_completions_recv_total"
+	e.metricMapCounters["ea_que_defrag_reqs_urgent_total"] = "ea_que_defrag_reqs_urgent_total"
+	e.metricMapCounters["ea_que_defrag_reqs_by_main_thread_total"] = "ea_que_defrag_reqs_by_main_thread_total"
+
+	e.metricMapGauges["ea_que_zip_reqs_queue_size"] = "ea_que_zip_reqs_queue_size"
+	e.metricMapCounters["ea_que_zip_reqs_send_total"] = "ea_que_zip_reqs_send_total"
+	e.metricMapCounters["ea_que_zip_completions_recv_total"] = "ea_que_zip_completions_recv_total"
+	e.metricMapCounters["ea_que_zip_reqs_urgent_total"] = "ea_que_zip_reqs_urgent_total"
+	e.metricMapCounters["ea_que_zip_reqs_by_main_thread_total"] = "ea_que_zip_reqs_by_main_thread_total"
+
+	e.metricMapGauges["ea_que_rezip_reqs_queue_size"] = "ea_que_rezip_reqs_queue_size"
+	e.metricMapCounters["ea_que_rezip_reqs_send_total"] = "ea_que_rezip_reqs_send_total"
+	e.metricMapCounters["ea_que_rezip_completions_recv_total"] = "ea_que_rezip_completions_recv_total"
+	e.metricMapCounters["ea_que_rezip_reqs_by_main_thread_total"] = "ea_que_rezip_reqs_by_main_thread_total"
+
+	e.metricMapCounters["ea_que_completion_queue_size"] = "ea_que_completion_queue_size"
 
 	// EArena.Overall
 	e.metricMapCounters["earena_block_size_bytes_total"] = "earena_block_size_bytes_total"
@@ -135,23 +145,12 @@ func (e *Exporter) registEngulaMetrics() {
 
 	// Engula.Coroutine
 	e.metricMapGauges["coro_main_thread_busy_level"] = "coro_main_thread_busy_level"
-	e.metricMapGauges["coro_zip_req_que_size"] = "coro_zip_req_que_size"
-	e.metricMapGauges["coro_rezip_req_que_size"] = "coro_rezip_req_que_size"
-	e.metricMapGauges["coro_defrag_req_que_size"] = "coro_defrag_req_que_size"
-	e.metricMapGauges["coro_completion_que_size"] = "coro_completion_que_size"
 
 	e.metricMapCounters["coro_schedule_total"] = "coro_schedule_total"
 	e.metricMapCounters["coro_schedule_soft_limit_useconds_total"] = "coro_schedule_soft_limit_useconds_total"
 	e.metricMapCounters["coro_schedule_hard_limit_useconds_total"] = "coro_schedule_hard_limit_useconds_total"
 	e.metricMapCounters["coro_schedule_plan_useconds_total"] = "coro_schedule_plan_useconds_total"
 	e.metricMapCounters["coro_schedule_real_useconds_total"] = "coro_schedule_real_useconds_total"
-
-	e.metricMapCounters["coro_zip_requests_total"] = "coro_zip_requests_total"
-	e.metricMapCounters["coro_zip_requests_by_main_thread_total"] = "coro_zip_requests_by_main_thread_total"
-	e.metricMapCounters["coro_rezip_requests_total"] = "coro_rezip_requests_total"
-	e.metricMapCounters["coro_rezip_requests_by_main_thread_total"] = "coro_rezip_requests_by_main_thread_total"
-	e.metricMapCounters["coro_defrag_requests_total"] = "coro_defrag_requests_total"
-	e.metricMapCounters["coro_defrag_requests_by_main_thread_total"] = "coro_defrag_requests_by_main_thread_total"
 
 	e.metricMapCounters["coro_main_thread_busy_level_useconds_total0"] = "coro_main_thread_busy_level_useconds_total0"
 	e.metricMapCounters["coro_main_thread_busy_level_useconds_total1"] = "coro_main_thread_busy_level_useconds_total1"

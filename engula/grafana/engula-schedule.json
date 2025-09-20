@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "11.5.2"
+      "version": "12.1.1"
     },
     {
       "type": "datasource",
@@ -114,7 +114,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -145,7 +145,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -159,7 +159,7 @@
           "refId": "A"
         }
       ],
-      "title": "Main Thread Busy Level",
+      "title": "Busy Level",
       "type": "timeseries"
     },
     {
@@ -211,7 +211,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -242,18 +242,18 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "redis_coro_zip_req_que_size{instance=\"$instance\"}",
-          "legendFormat": "zip, {{instance}}",
-          "range": true,
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
-          }
+          },
+          "editorMode": "code",
+          "expr": "redis_ea_que_zip_reqs_queue_size{instance=\"$instance\"}",
+          "legendFormat": "zip, {{instance}}",
+          "range": true,
+          "refId": "A"
         },
         {
           "datasource": {
@@ -261,7 +261,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_coro_rezip_req_que_size{instance=\"$instance\"}",
+          "expr": "redis_ea_que_rezip_reqs_queue_size{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "rezip, {{instance}}",
@@ -274,7 +274,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_coro_defrag_req_que_size{instance=\"$instance\"}",
+          "expr": "redis_ea_que_defrag_reqs_queue_size{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "defrag, {{instance}}",
@@ -287,7 +287,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_coro_completion_que_size{instance=\"$instance\"}",
+          "expr": "redis_ea_que_completion_queue_size{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "completion, {{instance}}",
@@ -295,7 +295,7 @@
           "refId": "D"
         }
       ],
-      "title": "Queues",
+      "title": "Queue Size",
       "type": "timeseries"
     },
     {
@@ -317,7 +317,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -347,7 +347,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -379,18 +379,18 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "increase(redis_coro_main_thread_busy_level_useconds_total0{instance=\"$instance\"}[1m])",
           "legendFormat": "L0, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -497,7 +497,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -528,18 +528,18 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "editorMode": "code",
           "expr": "increase(redis_coro_schedule_soft_limit_useconds_total{instance=\"$instance\"}[1m])/increase(redis_coro_schedule_total{instance=\"$instance\"}[1m])",
           "legendFormat": "soft_limit, {{instance}}",
           "range": true,
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "refId": "A"
         },
         {
           "datasource": {
@@ -616,7 +616,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -634,7 +634,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -646,7 +646,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -677,18 +677,18 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "rate(redis_coro_defrag_requests_total{instance=\"$instance\"}[1m])",
-          "legendFormat": "coro_requests, {{instance}}",
-          "range": true,
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
-          }
+          },
+          "editorMode": "code",
+          "expr": "increase(redis_ea_que_defrag_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "legendFormat": "main_thread, {{instance}}",
+          "range": true,
+          "refId": "A"
         },
         {
           "datasource": {
@@ -696,10 +696,10 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_coro_defrag_requests_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_ea_que_defrag_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_ea_que_defrag_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
-          "legendFormat": "coro_by_main, {{instance}}",
+          "legendFormat": "io_threads, {{instance}}",
           "range": true,
           "refId": "B"
         },
@@ -709,10 +709,10 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_que_defrag_direct_reqs_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_ea_que_defrag_reqs_urgent_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
-          "legendFormat": "ea_by_main, {{instance}}",
+          "legendFormat": "urgent, {{instance}}",
           "range": true,
           "refId": "C"
         }
@@ -739,7 +739,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -757,7 +757,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -769,7 +769,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -800,18 +800,18 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "rate(redis_coro_zip_requests_total{instance=\"$instance\"}[1m])",
-          "legendFormat": "coro_requests, {{instance}}",
-          "range": true,
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
-          }
+          },
+          "editorMode": "code",
+          "expr": "increase(redis_ea_que_zip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "legendFormat": "by_main, {{instance}}",
+          "range": true,
+          "refId": "A"
         },
         {
           "datasource": {
@@ -819,10 +819,10 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_coro_zip_requests_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_ea_que_zip_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_ea_que_zip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
-          "legendFormat": "coro_by_main,{{instance}}",
+          "legendFormat": "io_threads,{{instance}}",
           "range": true,
           "refId": "B"
         },
@@ -832,10 +832,10 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_que_zip_direct_reqs_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_ea_que_zip_reqs_urgent_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
-          "legendFormat": "ea_by_main, {{instance}}",
+          "legendFormat": "urgent, {{instance}}",
           "range": true,
           "refId": "C"
         }
@@ -862,7 +862,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -880,7 +880,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -892,7 +892,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -923,18 +923,18 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "rate(redis_coro_rezip_requests_total{instance=\"$instance\"}[1m])",
-          "legendFormat": "coro_requests, {{instance}}",
-          "range": true,
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
-          }
+          },
+          "editorMode": "code",
+          "expr": "increase(redis_ea_que_rezip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "legendFormat": "main_thread, {{instance}}",
+          "range": true,
+          "refId": "A"
         },
         {
           "datasource": {
@@ -942,10 +942,10 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_coro_rezip_requests_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_ea_que_rezip_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_ea_que_rezip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
-          "legendFormat": "coro_by_main, {{instance}}",
+          "legendFormat": "io_threads, {{instance}}",
           "range": true,
           "refId": "B"
         }
@@ -955,7 +955,7 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
@@ -990,13 +990,13 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Engula Schedule",
   "uid": "deyj88uhtiozka",
-  "version": 6,
+  "version": 5,
   "weekStart": ""
 }
