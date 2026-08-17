@@ -18,8 +18,8 @@ lines) but is a separate command, so the exporter's own INFO path never sees it.
 The user tier - `ENGULA INFO` with no arguments - is what gets scraped by
 default. The server also has a developer tier of per-bucket distributions and
 task-level internals; --include-engula-debug-metrics switches the scrape to
-`ENGULA INFO everything`, which returns both tiers in one reply. It replaces
-the plain call rather than adding a second one, since `everything` is a
+`ENGULA INFO EVERYTHING`, which returns both tiers in one reply. It replaces
+the plain call rather than adding a second one, since `EVERYTHING` is a
 superset. Expect roughly three times the series.
 
 Names already follow the server-side contract in the valkey-engula repo
@@ -282,11 +282,11 @@ func (e *Exporter) registerEngulaInfoMetric(ch chan<- prometheus.Metric, values 
 }
 
 func (e *Exporter) extractEngulaMetrics(ch chan<- prometheus.Metric, c redis.Conn) {
-	// "everything" is a superset of the default reply, so it replaces the
+	// "EVERYTHING" is a superset of the default reply, so it replaces the
 	// plain call instead of costing a second round trip.
 	args := []interface{}{"INFO"}
 	if e.options.InclEngulaDebugMetrics {
-		args = append(args, "everything")
+		args = append(args, "EVERYTHING")
 	}
 
 	info, err := redis.String(doRedisCmd(c, "ENGULA", args...))
