@@ -71,6 +71,7 @@ type Options struct {
 	RedactConfigMetrics            bool
 	InclSystemMetrics              bool
 	InclEngulaMetrics              bool
+	InclEngulaDebugMetrics         bool
 	SkipTLSVerification            bool
 	SetClientName                  bool
 	IsTile38                       bool

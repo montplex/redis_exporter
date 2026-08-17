@@ -1,6 +1,7 @@
 package exporter
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -14,10 +15,12 @@ Engula metrics, scraped from the `ENGULA INFO` command of a valkey-engula
 server. The reply is formatted like INFO (`# Section` headers, `key:value`
 lines) but is a separate command, so the exporter's own INFO path never sees it.
 
-Only the user tier is scraped: `ENGULA INFO` with no arguments. The server also
-has a developer tier behind `ENGULA INFO debug`, deliberately not collected -
-it carries per-bucket distributions and task-level internals that change
-between releases and would roughly triple the series count.
+The user tier - `ENGULA INFO` with no arguments - is what gets scraped by
+default. The server also has a developer tier of per-bucket distributions and
+task-level internals; --include-engula-debug-metrics switches the scrape to
+`ENGULA INFO everything`, which returns both tiers in one reply. It replaces
+the plain call rather than adding a second one, since `everything` is a
+superset. Expect roughly three times the series.
 
 Names already follow the server-side contract in the valkey-engula repo
 (docs/engula-metrics-design.md): engula_ prefix, _total only on counters,
@@ -116,6 +119,93 @@ var engulaInfoLabels = []struct {
 
 const engulaInfoMetricName = "engula_rdb_last_load_info"
 
+// Developer-tier names are unprefixed on the wire; see engulaDebugGauges.
+const engulaDebugPrefix = "engula_"
+
+/*
+Developer tier. These names come straight from the server's internal structs
+and carry no stability promise, so they are exported under an engula_ prefix
+applied here: unprefixed, defrag_* would land in the redis_defrag_* namespace
+that already holds jemalloc's active-defrag metrics.
+*/
+
+var engulaDebugGauges = []string{
+	"earena_indexed_blocks",
+	"earena_indexed_block_size_bytes",
+	"earena_direct_blocks",
+	"earena_index_bytes",
+
+	"defrag_mutable_blocks",
+	"defrag_immutable_recycling_blocks",
+
+	"ec_dicts",
+	"ec_dicts_cost_size_bytes",
+	"ec_dicts_async_deleting",
+	"ec_lines_skipped",
+	"ec_lines_recycling",
+}
+
+var engulaDebugCounters = []string{
+	"earena_block_size_bytes_total",
+	"earena_remark_records_total",
+	"earena_remark_records_size_bytes_total",
+
+	"ea_alloc_records_total",
+	"ea_alloc_record_size_bytes_total",
+	"ea_create_records_total",
+	"ea_create_record_size_bytes_total",
+	"ea_free_records_total",
+	"ea_async_free_records_total",
+	"ea_find_total",
+	"ea_blind_update_total",
+	"ea_que_defrag_reqs_send_total",
+	"ea_que_defrag_completions_recv_total",
+	"ea_que_zip_reqs_send_total",
+	"ea_que_zip_completions_recv_total",
+	"ea_que_rezip_reqs_send_total",
+	"ea_que_rezip_completions_recv_total",
+
+	"defrag_task_create_requests_total",
+	"defrag_task_create_succ_blocks_total",
+	"defrag_completion_old_blocks_total",
+	"defrag_completion_new_blocks_total",
+	"defrag_completion_old_records_total",
+	"defrag_completion_old_record_size_bytes_total",
+	"defrag_completion_new_records_total",
+	"defrag_completion_new_record_size_bytes_total",
+
+	"ec_dicts_async_deleted_total",
+	"ec_lines_created_total",
+	"ec_lines_deleted_total",
+	"ec_zip_completion_old_blocks_total",
+	"ec_zip_completion_old_block_size_bytes_total",
+	"ec_zip_completion_old_records_total",
+	"ec_zip_completion_old_record_size_bytes_total",
+	"ec_zip_completion_new_blocks_total",
+	"ec_zip_completion_new_block_size_bytes_total",
+	"ec_zip_completion_new_records_total",
+	"ec_zip_completion_new_record_size_bytes_total",
+	"ec_rezip_completion_old_blocks_total",
+	"ec_rezip_completion_old_block_size_bytes_total",
+	"ec_rezip_completion_old_records_total",
+	"ec_rezip_completion_old_record_size_bytes_total",
+	"ec_rezip_completion_new_blocks_total",
+	"ec_rezip_completion_new_block_size_bytes_total",
+	"ec_rezip_completion_new_records_total",
+	"ec_rezip_completion_new_record_size_bytes_total",
+
+	"coro_schedule_soft_limit_useconds_total",
+	"coro_schedule_hard_limit_useconds_total",
+	"coro_schedule_plan_useconds_total",
+}
+
+// Per-bucket gauges the server flattens into the metric name.
+const (
+	engulaDefragFillRateBuckets = 16
+	engulaCompressNsizeBuckets  = 10
+	engulaCoroBusyLevels        = 5
+)
+
 func isEngulaInfoField(field string) bool {
 	for _, l := range engulaInfoLabels {
 		if l.field == field {
@@ -138,6 +228,31 @@ func (e *Exporter) registEngulaMetrics() {
 		} else {
 			e.metricMapGauges[src] = conv.name
 		}
+	}
+
+	if !e.options.InclEngulaDebugMetrics {
+		return
+	}
+
+	for _, name := range engulaDebugGauges {
+		e.metricMapGauges[name] = engulaDebugPrefix + name
+	}
+	for _, name := range engulaDebugCounters {
+		e.metricMapCounters[name] = engulaDebugPrefix + name
+	}
+	for i := 0; i < engulaDefragFillRateBuckets; i++ {
+		name := fmt.Sprintf("defrag_fill_rate_bucket%d_blocks", i)
+		e.metricMapGauges[name] = engulaDebugPrefix + name
+	}
+	for i := 0; i < engulaCompressNsizeBuckets; i++ {
+		name := fmt.Sprintf("ec_lines_nsize_bucket%d", i)
+		e.metricMapGauges[name] = engulaDebugPrefix + name
+	}
+	// The server flattens the level index onto _total, which would make
+	// OpenMetrics append a second one. Rename to a well-formed counter.
+	for i := 0; i < engulaCoroBusyLevels; i++ {
+		e.metricMapCounters[fmt.Sprintf("coro_main_thread_busy_level_useconds_total%d", i)] =
+			fmt.Sprintf("%scoro_main_thread_busy_level%d_useconds_total", engulaDebugPrefix, i)
 	}
 }
 
@@ -167,7 +282,14 @@ func (e *Exporter) registerEngulaInfoMetric(ch chan<- prometheus.Metric, values 
 }
 
 func (e *Exporter) extractEngulaMetrics(ch chan<- prometheus.Metric, c redis.Conn) {
-	info, err := redis.String(doRedisCmd(c, "ENGULA", "INFO"))
+	// "everything" is a superset of the default reply, so it replaces the
+	// plain call instead of costing a second round trip.
+	args := []interface{}{"INFO"}
+	if e.options.InclEngulaDebugMetrics {
+		args = append(args, "everything")
+	}
+
+	info, err := redis.String(doRedisCmd(c, "ENGULA", args...))
 	if err != nil || info == "" {
 		// Debug, not Info: the collector is on by default, so a plain Redis or
 		// Valkey target would otherwise log an error on every scrape.
