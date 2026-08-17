@@ -102,12 +102,12 @@ var engulaUnitConversions = map[string]struct {
 	"engula_forecast_time_to_wall_ms": {"engula_forecast_time_to_wall_seconds", 1e3},
 }
 
-// Metrics whose value is a string. Prometheus cannot hold one, so they become a
-// constant-1 gauge carrying the strings as labels, like redis_instance_info.
-// The server emits them as `name:k1=v1,k2=v2`; the label names come from the
-// reply, so a server that adds a key does not need an exporter change.
-var engulaInfoMetrics = map[string]bool{
-	"engula_rdb_last_load_info": true,
+// Metrics whose value is a string. Prometheus cannot hold one, so each becomes
+// a constant-1 gauge carrying the string as a label, like redis_instance_info.
+// The value is the label name to use.
+var engulaStringMetrics = map[string]string{
+	"engula_rdb_last_load_mode":   "mode",
+	"engula_rdb_last_load_reason": "reason",
 }
 
 func (e *Exporter) registEngulaMetrics() {
@@ -126,32 +126,17 @@ func (e *Exporter) registEngulaMetrics() {
 	}
 }
 
-// Emits `name{k1="v1",k2="v2"} 1` from a `k1=v1,k2=v2` value. Label names and
-// values are ordered as the server wrote them, which is stable per metric.
-func (e *Exporter) registerEngulaInfoMetric(ch chan<- prometheus.Metric, metricName, fieldValue string) {
-	var names, values []string
-	for _, pair := range strings.Split(fieldValue, ",") {
-		kv := strings.SplitN(pair, "=", 2)
-		if len(kv) != 2 {
-			log.Debugf("engula: %s has a malformed label pair %q", metricName, pair)
-			return
-		}
-		names = append(names, strings.TrimSpace(kv[0]))
-		values = append(values, strings.TrimSpace(kv[1]))
-	}
-	if len(names) == 0 {
-		return
-	}
-
-	// findOrCreateMetricDescription() would take the label *values* as the
-	// label *names*, so the description has to be built here.
+// Emits `name{label="value"} 1`. The description is built here rather than
+// through findOrCreateMetricDescription(), which would take the label *value*
+// as the label *name*.
+func (e *Exporter) registerEngulaStringMetric(ch chan<- prometheus.Metric, metricName, labelName, value string) {
 	desc, found := e.metricDescriptions[metricName]
 	if !found {
-		desc = newMetricDescr(e.options.Namespace, metricName, metricName+" metric", names)
+		desc = newMetricDescr(e.options.Namespace, metricName, metricName+" metric", []string{labelName})
 		e.metricDescriptions[metricName] = desc
 	}
 
-	m, err := prometheus.NewConstMetric(desc, prometheus.GaugeValue, 1, values...)
+	m, err := prometheus.NewConstMetric(desc, prometheus.GaugeValue, 1, strings.TrimSpace(value))
 	if err != nil {
 		log.Debugf("engula: NewConstMetric(%s) err: %s", metricName, err)
 		return
@@ -177,8 +162,8 @@ func (e *Exporter) extractEngulaMetrics(ch chan<- prometheus.Metric, c redis.Con
 		split := strings.SplitN(line, ":", 2)
 		fieldKey, fieldValue := split[0], split[1]
 
-		if engulaInfoMetrics[fieldKey] {
-			e.registerEngulaInfoMetric(ch, fieldKey, fieldValue)
+		if labelName, ok := engulaStringMetrics[fieldKey]; ok {
+			e.registerEngulaStringMetric(ch, fieldKey, labelName, fieldValue)
 			continue
 		}
 
