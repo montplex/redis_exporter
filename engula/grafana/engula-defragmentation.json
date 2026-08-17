@@ -152,7 +152,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "redis_defrag_zmalloc_mem_used_bytes{instance=\"$instance\"}",
+              "expr": "redis_memory_used_bytes{instance=\"$instance\"}",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "zmalloc,{{instance}}",
@@ -167,7 +167,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "redis_defrag_logic_mem_used_bytes{instance=\"$instance\"}",
+              "expr": "(redis_memory_used_bytes{instance=\"$instance\"} - redis_mem_not_counted_for_eviction_bytes{instance=\"$instance\"})",
               "fullMetaSearch": false,
               "hide": false,
               "includeNullMetadata": true,
@@ -183,25 +183,12 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "redis_defrag_mutable_blocks_size_bytes{instance=\"$instance\"}",
+              "expr": "redis_engula_arena_mutable_zone_bytes{instance=\"$instance\"}",
               "hide": false,
               "instant": false,
               "legendFormat": "mutable_blocks,{{instance}}",
               "range": true,
               "refId": "C"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
-              },
-              "editorMode": "code",
-              "expr": "redis_defrag_immutable_blocks_size_bytes{instance=\"$instance\"}",
-              "hide": false,
-              "instant": false,
-              "legendFormat": "immutable_blocks,{{instance}}",
-              "range": true,
-              "refId": "D"
             }
           ],
           "title": "Memory Used",
@@ -297,7 +284,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "redis_defrag_recyclable_space_bytes{instance=\"$instance\"}",
+              "expr": "redis_engula_recyclable_bytes{instance=\"$instance\"}",
               "fullMetaSearch": false,
               "hide": false,
               "includeNullMetadata": true,
@@ -397,7 +384,7 @@
             {
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "redis_defrag_overhead_bytes{instance=\"$instance\"}",
+              "expr": "redis_mem_not_counted_for_eviction_bytes{instance=\"$instance\"}",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "overhead,{{instance}}",
@@ -499,7 +486,7 @@
             {
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "redis_defrag_mem_tofree_bytes{instance=\"$instance\"}",
+              "expr": "clamp_min(redis_memory_used_bytes{instance=\"$instance\"} - redis_mem_not_counted_for_eviction_bytes{instance=\"$instance\"} - redis_memory_max_bytes{instance=\"$instance\"}, 0)",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "tofree,{{instance}}",
@@ -616,53 +603,12 @@
       "pluginVersion": "11.5.2",
       "targets": [
         {
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(redis_defrag_triggered_by_cron_total{instance=\"$instance\"}[1m])",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "legendFormat": "cron,{{instance}}",
-          "range": true,
-          "refId": "A",
-          "useBackend": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
-        },
-        {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_defrag_triggered_by_free_total{instance=\"$instance\"}[1m])",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "record_free,{{instance}}",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_defrag_triggered_by_blind_update_total{instance=\"$instance\"}[1m])",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "record_update,{{instance}}",
-          "range": true,
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_evict_defrag_triggered_by_evict_timer_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_evict_urgent_defrag_timer_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "evict_timer,{{instance}}",
@@ -675,7 +621,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_evict_defrag_triggered_by_evict_func_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_evict_urgent_defrag_wall_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "evict_func,{{instance}}",
@@ -772,7 +718,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "rate(redis_ea_que_defrag_reqs_send_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ea_que_defrag_reqs_send_total{instance=\"$instance\"}[1m])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "send_que,{{instance}}",
@@ -790,7 +736,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_que_defrag_reqs_urgent_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_defrag_inline_urgent_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "urgent,{{instance}}",
@@ -886,7 +832,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "redis_evict_timer_status{instance=\"$instance\"}",
+          "expr": "redis_engula_evict_timer_active{instance=\"$instance\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "evict_timer_status,{{instance}}",
@@ -987,7 +933,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "rate(redis_evict_timer_start_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_evict_timer_starts_total{instance=\"$instance\"}[1m])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "start_total,{{instance}}",
