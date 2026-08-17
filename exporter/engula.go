@@ -116,14 +116,14 @@ var engulaInfoLabels = []struct {
 
 const engulaInfoMetricName = "engula_rdb_last_load_info"
 
-// Lookup form of engulaInfoLabels, built once.
-var engulaInfoFields = func() map[string]bool {
-	m := make(map[string]bool, len(engulaInfoLabels))
+func isEngulaInfoField(field string) bool {
 	for _, l := range engulaInfoLabels {
-		m[l.field] = true
+		if l.field == field {
+			return true
+		}
 	}
-	return m
-}()
+	return false
+}
 
 func (e *Exporter) registEngulaMetrics() {
 	for _, name := range engulaGauges {
@@ -186,7 +186,7 @@ func (e *Exporter) extractEngulaMetrics(ch chan<- prometheus.Metric, c redis.Con
 		split := strings.SplitN(line, ":", 2)
 		fieldKey, fieldValue := split[0], split[1]
 
-		if _, ok := engulaInfoFields[fieldKey]; ok {
+		if isEngulaInfoField(fieldKey) {
 			infoValues[fieldKey] = strings.TrimSpace(fieldValue)
 			continue
 		}
