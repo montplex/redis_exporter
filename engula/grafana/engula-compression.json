@@ -153,7 +153,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket0_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket0_blocks{instance=\"$instance\"}",
           "legendFormat": "<30%,{{instance}}",
           "range": true,
           "refId": "A"
@@ -164,7 +164,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket1_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket1_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "40%,{{instance}}",
@@ -177,7 +177,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket2_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket2_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "50%,{{instance}}",
@@ -190,7 +190,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket3_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket3_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "60%,{{instance}}",
@@ -203,7 +203,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket4_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket4_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "70%,{{instance}}",
@@ -216,7 +216,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket5_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket5_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "80%,{{instance}}",
@@ -315,7 +315,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket6_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket6_blocks{instance=\"$instance\"}",
           "legendFormat": "<85%,{{instance}}",
           "range": true,
           "refId": "A"
@@ -326,7 +326,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket7_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket7_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "<90%,{{instance}}",
@@ -339,7 +339,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket8_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket8_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "<95%,{{instance}}",
@@ -352,7 +352,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_fill_rate_bucket9_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket9_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "100%,{{instance}}",
@@ -447,7 +447,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "redis_defrag_mutable_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_mutable_blocks{instance=\"$instance\"}",
           "legendFormat": "mutable, {{instance}}",
           "range": true,
           "refId": "A",
@@ -462,7 +462,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_defrag_immutable_recycling_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_immutable_recycling_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "recycling, {{instance}}",
@@ -574,7 +574,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket0{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket0{instance=\"$instance\"}",
           "legendFormat": "10%,{{instance}}",
           "range": true,
           "refId": "A"
@@ -585,7 +585,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket1{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket1{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "20%,{{instance}}",
@@ -598,7 +598,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket2{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket2{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "30%,{{instance}}",
@@ -611,7 +611,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket3{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket3{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "40%,{{instance}}",
@@ -624,7 +624,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket4{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket4{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "50%,{{instance}}",
@@ -723,7 +723,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket5{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket5{instance=\"$instance\"}",
           "legendFormat": "60%,{{instance}}",
           "range": true,
           "refId": "A"
@@ -734,7 +734,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket6{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket6{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "70%,{{instance}}",
@@ -747,7 +747,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket7{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket7{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "80%,{{instance}}",
@@ -760,7 +760,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket8{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket8{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "90%,{{instance}}",
@@ -773,7 +773,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_nsize_bucket9{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket9{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "100%,{{instance}}",
@@ -868,7 +868,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "redis_ec_lines_recycling{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_recycling{instance=\"$instance\"}",
           "legendFormat": "recycling, {{instance}}",
           "range": true,
           "refId": "A",
@@ -883,7 +883,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_lines_skipped{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_skipped{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "skipped, {{instance}}",
@@ -996,7 +996,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "redis_ec_dicts{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_dicts{instance=\"$instance\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "total, {{instance}}",
@@ -1107,7 +1107,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "redis_ec_dicts_cost_size_bytes{instance=\"$instance\"} / redis_ec_dicts{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_dicts_cost_size_bytes{instance=\"$instance\"} / redis_engula_ec_dicts{instance=\"$instance\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "costs/dict, {{instance}}",
@@ -1208,7 +1208,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "redis_ec_dicts_async_deleted_total{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_dicts_async_deleted_total{instance=\"$instance\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "number, {{instance}}",
@@ -1309,7 +1309,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "redis_ec_dicts_async_deleting{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_dicts_async_deleting{instance=\"$instance\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "number, {{instance}}",

@@ -171,7 +171,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_earena_block_size_bytes{instance=\"$instance\"}",
+          "expr": "redis_engula_arena_block_bytes{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "blocks, {{instance}}",
@@ -184,7 +184,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_earena_record_size_bytes{instance=\"$instance\"}",
+          "expr": "redis_engula_arena_record_bytes{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "records, {{instance}}",
@@ -284,7 +284,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_earena_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_arena_blocks{instance=\"$instance\"}",
           "legendFormat": "accumulated, {{instance}}",
           "range": true,
           "refId": "A"
@@ -295,7 +295,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_earena_indexed_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_earena_indexed_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "realtime, {{instance}}",
@@ -395,7 +395,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_earena_block_size_bytes_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_earena_block_size_bytes_total{instance=\"$instance\"}[1m])",
           "legendFormat": "new, {{instance}}",
           "range": true,
           "refId": "A"
@@ -493,7 +493,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_alloc_records_total[1m])",
+          "expr": "rate(redis_engula_ea_alloc_records_total[1m])",
           "legendFormat": "allocate, {{instance}}",
           "range": true,
           "refId": "A"
@@ -504,7 +504,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_create_records_total[1m])",
+          "expr": "rate(redis_engula_ea_create_records_total[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "create, {{instance}}",
@@ -517,7 +517,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_free_records_total[1m])",
+          "expr": "rate(redis_engula_ea_free_records_total[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "free, {{instance}}",
@@ -530,7 +530,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_async_free_records_total[1m])",
+          "expr": "rate(redis_engula_ea_async_free_records_total[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "async_free, {{instance}}",
@@ -543,25 +543,12 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ea_blind_update_total[1m])",
+          "expr": "rate(redis_engula_ea_blind_update_total[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "blind_update, {{instance}}",
           "range": true,
           "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_ea_rmw_update_total[1m])",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "rmw_update, {{instance}}",
-          "range": true,
-          "refId": "F"
         }
       ],
       "title": "Allocate/Free Records",
@@ -643,7 +630,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket0_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket0_blocks{instance=\"$instance\"}",
           "instant": true,
           "legendFormat": "<30%",
           "range": false,
@@ -656,7 +643,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket1_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket1_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "<40%",
@@ -670,7 +657,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket2_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket2_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "<50%",
@@ -684,7 +671,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket3_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket3_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "<60%",
@@ -698,7 +685,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket4_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket4_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "<70%",
@@ -712,7 +699,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket5_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket5_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "<80%",
@@ -726,7 +713,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket6_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket6_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "<85%",
@@ -740,7 +727,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket7_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket7_blocks{instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -755,7 +742,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket8_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket8_blocks{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "<95%",
@@ -769,7 +756,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_defrag_fill_rate_bucket9_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_fill_rate_bucket9_blocks{instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -871,7 +858,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_earena_block_size_bytes/redis_earena_blocks{instance=\"$instance\"}",
+          "expr": "redis_engula_arena_block_bytes/redis_engula_arena_blocks{instance=\"$instance\"}",
           "legendFormat": "avg, {{instance}}",
           "range": true,
           "refId": "A"
@@ -969,7 +956,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_defrag_task_create_requests_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_defrag_task_create_requests_total{instance=\"$instance\"}[1m])",
           "legendFormat": "requests, {{instance}}",
           "range": true,
           "refId": "A"
@@ -980,7 +967,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_defrag_task_create_succ_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_defrag_tasks_created_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "created, {{instance}}",
@@ -1080,7 +1067,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_defrag_completion_old_blocks_total{instance=\"$instance\"}[1m])/rate(redis_defrag_task_create_succ_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_defrag_completion_old_blocks_total{instance=\"$instance\"}[1m])/rate(redis_engula_defrag_tasks_created_total{instance=\"$instance\"}[1m])",
           "legendFormat": "before, {{instance}}",
           "range": true,
           "refId": "A"
@@ -1091,7 +1078,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_defrag_completion_new_blocks_total{instance=\"$instance\"}[1m])/rate(redis_defrag_task_create_succ_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_defrag_completion_new_blocks_total{instance=\"$instance\"}[1m])/rate(redis_engula_defrag_tasks_created_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "after, {{instance}}",
@@ -1179,7 +1166,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket0{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket0{instance=\"$instance\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": true,
@@ -1195,7 +1182,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket1{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket1{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "20%",
@@ -1209,7 +1196,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket2{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket2{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "30%",
@@ -1223,7 +1210,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket3{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket3{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "40%",
@@ -1237,7 +1224,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket4{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket4{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "50%",
@@ -1251,7 +1238,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket5{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket5{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "60%",
@@ -1265,7 +1252,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket6{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket6{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "70%",
@@ -1279,7 +1266,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket7{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket7{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "80%",
@@ -1293,7 +1280,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket8{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket8{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "90%",
@@ -1307,7 +1294,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "redis_ec_lines_nsize_bucket9{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_lines_nsize_bucket9{instance=\"$instance\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "100%",
@@ -1407,7 +1394,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_zip_completion_old_block_size_bytes_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_zip_completion_old_block_size_bytes_total{instance=\"$instance\"}[1m])",
           "legendFormat": "compress_old_bytes, {{instance}}",
           "range": true,
           "refId": "A"
@@ -1418,7 +1405,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_zip_completion_new_block_size_bytes_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_zip_completion_new_block_size_bytes_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "compress_new_bytes, {{instance}}",
@@ -1431,7 +1418,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_rezip_completion_old_block_size_bytes_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_rezip_completion_old_block_size_bytes_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "recompress_old_bytes, {{instance}}",
@@ -1444,7 +1431,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_rezip_completion_new_block_size_bytes_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_rezip_completion_new_block_size_bytes_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "recompress_new_bytes, {{instance}}",
@@ -1543,7 +1530,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ec_dicts{instance=\"$instance\"}",
+          "expr": "redis_engula_ec_dicts{instance=\"$instance\"}",
           "legendFormat": "counts, {{instance}}",
           "range": true,
           "refId": "A"
@@ -1640,7 +1627,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_zip_completion_old_blocks_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_zip_completion_old_blocks_total{instance=\"$instance\"}[1m])",
           "legendFormat": "compress_old_blocks, {{instance}}",
           "range": true,
           "refId": "A"
@@ -1651,7 +1638,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_zip_completion_new_blocks_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_zip_completion_new_blocks_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "compress_new_blocks, {{instance}}",
@@ -1664,7 +1651,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_rezip_completion_old_blocks_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_rezip_completion_old_blocks_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "recompress_old_blocks, {{instance}}",
@@ -1677,7 +1664,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_ec_rezip_completion_new_blocks_total{instance=\"$instance\"}[1m])",
+          "expr": "rate(redis_engula_ec_rezip_completion_new_blocks_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "recompress_new_blocks, {{instance}}",

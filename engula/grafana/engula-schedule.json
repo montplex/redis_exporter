@@ -153,7 +153,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_coro_main_thread_busy_level{instance=\"$instance\"}",
+          "expr": "redis_engula_coro_busy_level{instance=\"$instance\"}",
           "legendFormat": "Level, {{instance}}",
           "range": true,
           "refId": "A"
@@ -250,7 +250,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ea_que_zip_reqs_queue_size{instance=\"$instance\"}",
+          "expr": "redis_engula_zip_queue_length{instance=\"$instance\"}",
           "legendFormat": "zip, {{instance}}",
           "range": true,
           "refId": "A"
@@ -261,7 +261,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ea_que_rezip_reqs_queue_size{instance=\"$instance\"}",
+          "expr": "redis_engula_rezip_queue_length{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "rezip, {{instance}}",
@@ -274,7 +274,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ea_que_defrag_reqs_queue_size{instance=\"$instance\"}",
+          "expr": "redis_engula_defrag_queue_length{instance=\"$instance\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "defrag, {{instance}}",
@@ -287,7 +287,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_ea_que_completion_queue_size{instance=\"$instance\"}",
+          "expr": "(redis_engula_fast_completion_queue_length{instance=\"$instance\"} + redis_engula_slow_completion_queue_length{instance=\"$instance\"})",
           "hide": false,
           "instant": false,
           "legendFormat": "completion, {{instance}}",
@@ -355,7 +355,7 @@
               }
             ]
           },
-          "unit": "µs"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -387,7 +387,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_main_thread_busy_level_useconds_total0{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_main_thread_busy_level0_useconds_total{instance=\"$instance\"}[1m])",
           "legendFormat": "L0, {{instance}}",
           "range": true,
           "refId": "A"
@@ -398,7 +398,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_main_thread_busy_level_useconds_total1{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_main_thread_busy_level1_useconds_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "L1, {{instance}}",
@@ -411,7 +411,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_main_thread_busy_level_useconds_total2{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_main_thread_busy_level2_useconds_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "L2, {{instance}}",
@@ -424,7 +424,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_main_thread_busy_level_useconds_total3{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_main_thread_busy_level3_useconds_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "L3, {{instance}}",
@@ -437,7 +437,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_main_thread_busy_level_useconds_total4{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_main_thread_busy_level4_useconds_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "L4, {{instance}}",
@@ -536,7 +536,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_schedule_soft_limit_useconds_total{instance=\"$instance\"}[1m])/increase(redis_coro_schedule_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_schedule_soft_limit_useconds_total{instance=\"$instance\"}[1m])/increase(redis_engula_coro_schedule_total{instance=\"$instance\"}[1m])",
           "legendFormat": "soft_limit, {{instance}}",
           "range": true,
           "refId": "A"
@@ -547,7 +547,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_schedule_hard_limit_useconds_total{instance=\"$instance\"}[1m])/increase(redis_coro_schedule_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_schedule_hard_limit_useconds_total{instance=\"$instance\"}[1m])/increase(redis_engula_coro_schedule_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "hard_limit, {{instance}}",
@@ -560,7 +560,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_schedule_plan_useconds_total{instance=\"$instance\"}[1m])/increase(redis_coro_schedule_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_schedule_plan_useconds_total{instance=\"$instance\"}[1m])/increase(redis_engula_coro_schedule_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "plan, {{instance}}",
@@ -573,7 +573,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_coro_schedule_real_useconds_total{instance=\"$instance\"}[1m])/increase(redis_coro_schedule_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_coro_run_seconds_total{instance=\"$instance\"}[1m])/increase(redis_engula_coro_schedule_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "real, {{instance}}",
@@ -685,7 +685,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_defrag_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_defrag_inline_main_thread_total{instance=\"$instance\"}[1m])",
           "legendFormat": "main_thread, {{instance}}",
           "range": true,
           "refId": "A"
@@ -696,7 +696,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_defrag_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_ea_que_defrag_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_ea_que_defrag_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_engula_defrag_inline_main_thread_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "io_threads, {{instance}}",
@@ -709,7 +709,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_defrag_reqs_urgent_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_defrag_inline_urgent_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "urgent, {{instance}}",
@@ -808,7 +808,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_zip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_zip_inline_main_thread_total{instance=\"$instance\"}[1m])",
           "legendFormat": "by_main, {{instance}}",
           "range": true,
           "refId": "A"
@@ -819,7 +819,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_zip_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_ea_que_zip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_ea_que_zip_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_engula_zip_inline_main_thread_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "io_threads,{{instance}}",
@@ -832,7 +832,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_zip_reqs_urgent_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_zip_inline_urgent_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "urgent, {{instance}}",
@@ -931,7 +931,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_rezip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_rezip_inline_main_thread_total{instance=\"$instance\"}[1m])",
           "legendFormat": "main_thread, {{instance}}",
           "range": true,
           "refId": "A"
@@ -942,7 +942,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "increase(redis_ea_que_rezip_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_ea_que_rezip_reqs_by_main_thread_total{instance=\"$instance\"}[1m])",
+          "expr": "increase(redis_engula_ea_que_rezip_reqs_send_total{instance=\"$instance\"}[1m]) - increase(redis_engula_rezip_inline_main_thread_total{instance=\"$instance\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "io_threads, {{instance}}",
