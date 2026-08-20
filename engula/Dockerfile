@@ -41,7 +41,7 @@ FROM alpine:3.20 AS alpine
 
 COPY --from=builder /redis_exporter /redis_exporter
 COPY --from=builder /etc/ssl/certs /etc/ssl/certs
-COPY ./engula/grafana/engula-dashboard.json /engula-dashboard.json
+COPY ./engula/grafana/engula-overview-v2.json /engula-overview-v2.json
 
 # Run as non-root user for secure environments
 USER 59000:59000
