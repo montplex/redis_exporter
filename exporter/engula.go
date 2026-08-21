@@ -20,7 +20,8 @@ default. The server also has a developer tier of per-bucket distributions and
 task-level internals; --include-engula-debug-metrics switches the scrape to
 `ENGULA INFO EVERYTHING`, which returns both tiers in one reply. It replaces
 the plain call rather than adding a second one, since `EVERYTHING` is a
-superset. Expect roughly three times the series.
+superset. The user tier is 45 metrics and the developer tier 84, so expect
+roughly three times the series.
 
 Names already follow the server-side contract in the valkey-engula repo
 (docs/engula-metrics-design.md): engula_ prefix, _total only on counters,
@@ -37,12 +38,13 @@ var engulaGauges = []string{
 	"engula_arena_block_bytes",
 	"engula_arena_records",
 	"engula_arena_record_bytes",
-	"engula_arena_mutable_zone_bytes",
 
-	// pipeline
-	"engula_defrag_queue_length",
+	// pipeline. zip, rezip and defrag are published in one shape so a
+	// dashboard panel built for one reads the others; the completion queues
+	// and the in-flight total are shared by all three.
 	"engula_zip_queue_length",
 	"engula_rezip_queue_length",
+	"engula_defrag_queue_length",
 	"engula_fast_completion_queue_length",
 	"engula_slow_completion_queue_length",
 	"engula_tasks_inflight",
@@ -50,9 +52,6 @@ var engulaGauges = []string{
 	// evict
 	"engula_mem_usage_pressure_ratio",
 	"engula_mem_defrag_pressure_ratio",
-	"engula_forecast_inflow_bytes_per_second",
-	"engula_forecast_reclaim_bytes_per_second",
-	"engula_forecast_target_bytes_per_second",
 	"engula_recyclable_bytes",
 	"engula_recycling_bytes",
 	"engula_evict_timer_active",
@@ -70,26 +69,45 @@ var engulaGauges = []string{
 // exported as a gauge is a naming violation, and the inverse makes the metric
 // name differ between the text and OpenMetrics exposition formats.
 var engulaCounters = []string{
-	// pipeline
-	"engula_defrag_inline_urgent_total",
-	"engula_defrag_inline_main_thread_total",
-	"engula_zip_inline_urgent_total",
+	// pipeline: zip. attempted - created is what never became a task,
+	// created - inline_urgent is what was queued. The two main-thread paths
+	// stay apart: inline_urgent is the queue being full at creation,
+	// inline_main_thread is the io threads not draining it afterwards.
+	"engula_zip_tasks_attempted_total",
+	"engula_zip_tasks_created_total",
 	"engula_zip_inline_main_thread_total",
+	"engula_zip_inline_urgent_total",
+	"engula_zip_retired_bytes_total",
+	"engula_zip_produced_bytes_total",
+
+	// pipeline: rezip. No inline_urgent counterpart - a full queue gates
+	// creation here rather than falling back to the main thread, so created is
+	// already the queued count. Its attempted ticks on the 100ms cron cadence,
+	// which makes created/attempted a hit rate, not a workload.
+	"engula_rezip_tasks_attempted_total",
+	"engula_rezip_tasks_created_total",
 	"engula_rezip_inline_main_thread_total",
+	"engula_rezip_retired_bytes_total",
+	"engula_rezip_produced_bytes_total",
+
+	// pipeline: defrag. The two reasons a task was not created are named
+	// rather than left as one difference, so
+	// attempted = created + skipped_threshold + skipped_insufficient.
+	"engula_defrag_tasks_attempted_total",
 	"engula_defrag_tasks_created_total",
 	"engula_defrag_tasks_skipped_threshold_total",
 	"engula_defrag_tasks_skipped_insufficient_total",
+	"engula_defrag_inline_main_thread_total",
+	"engula_defrag_inline_urgent_total",
 	"engula_defrag_retired_bytes_total",
 	"engula_defrag_produced_bytes_total",
 
-	// evict
-	"engula_evict_forecast_keys_total",
+	// evict. The urgent_defrag pair splits by call site, not by caller:
+	// timer is evictionTimeProc's spin loop, recycle is performEvictions'
+	// tail. A timer tick can raise both.
 	"engula_evict_timer_starts_total",
 	"engula_evict_urgent_defrag_timer_total",
-	"engula_evict_urgent_defrag_wall_total",
-
-	// compress
-	"engula_compress_encode_errors_total",
+	"engula_evict_urgent_defrag_recycle_total",
 
 	// coro
 	"engula_coro_schedule_total",
@@ -97,12 +115,14 @@ var engulaCounters = []string{
 
 // The server keeps human-readable units; Prometheus wants base units. Rename
 // and scale on the way out, as the exporter already does for latest_fork_usec.
+// debug marks a developer-tier field, registered only with that scrape.
 var engulaUnitConversions = map[string]struct {
 	name    string
 	divisor float64
+	debug   bool
 }{
-	"engula_coro_run_useconds_total":  {"engula_coro_run_seconds_total", 1e6},
-	"engula_forecast_time_to_wall_ms": {"engula_forecast_time_to_wall_seconds", 1e3},
+	"engula_coro_run_useconds_total":  {"engula_coro_run_seconds_total", 1e6, false},
+	"engula_forecast_time_to_wall_ms": {"engula_forecast_time_to_wall_seconds", 1e3, true},
 }
 
 // String-valued fields, which Prometheus cannot hold. They are collected while
@@ -130,14 +150,17 @@ that already holds jemalloc's active-defrag metrics.
 */
 
 var engulaDebugGauges = []string{
+	// memory
 	"earena_indexed_blocks",
 	"earena_indexed_block_size_bytes",
 	"earena_direct_blocks",
 	"earena_index_bytes",
 
+	// pipeline
 	"defrag_mutable_blocks",
 	"defrag_immutable_recycling_blocks",
 
+	// compress
 	"ec_dicts",
 	"ec_dicts_cost_size_bytes",
 	"ec_dicts_async_deleting",
@@ -146,10 +169,12 @@ var engulaDebugGauges = []string{
 }
 
 var engulaDebugCounters = []string{
+	// memory
 	"earena_block_size_bytes_total",
 	"earena_remark_records_total",
 	"earena_remark_records_size_bytes_total",
 
+	// pipeline
 	"ea_alloc_records_total",
 	"ea_alloc_record_size_bytes_total",
 	"ea_create_records_total",
@@ -158,14 +183,6 @@ var engulaDebugCounters = []string{
 	"ea_async_free_records_total",
 	"ea_find_total",
 	"ea_blind_update_total",
-	"ea_que_defrag_reqs_send_total",
-	"ea_que_defrag_completions_recv_total",
-	"ea_que_zip_reqs_send_total",
-	"ea_que_zip_completions_recv_total",
-	"ea_que_rezip_reqs_send_total",
-	"ea_que_rezip_completions_recv_total",
-
-	"defrag_task_create_requests_total",
 	"defrag_task_create_succ_blocks_total",
 	"defrag_completion_old_blocks_total",
 	"defrag_completion_new_blocks_total",
@@ -174,29 +191,50 @@ var engulaDebugCounters = []string{
 	"defrag_completion_new_records_total",
 	"defrag_completion_new_record_size_bytes_total",
 
+	// compress. The block-level completion bytes are absent here: they are the
+	// user tier's engula_{zip,rezip}_{retired,produced}_bytes_total.
+	"ec_encode_errors_total",
 	"ec_dicts_async_deleted_total",
 	"ec_lines_created_total",
 	"ec_lines_deleted_total",
 	"ec_zip_completion_old_blocks_total",
-	"ec_zip_completion_old_block_size_bytes_total",
 	"ec_zip_completion_old_records_total",
 	"ec_zip_completion_old_record_size_bytes_total",
 	"ec_zip_completion_new_blocks_total",
-	"ec_zip_completion_new_block_size_bytes_total",
 	"ec_zip_completion_new_records_total",
 	"ec_zip_completion_new_record_size_bytes_total",
 	"ec_rezip_completion_old_blocks_total",
-	"ec_rezip_completion_old_block_size_bytes_total",
 	"ec_rezip_completion_old_records_total",
 	"ec_rezip_completion_old_record_size_bytes_total",
 	"ec_rezip_completion_new_blocks_total",
-	"ec_rezip_completion_new_block_size_bytes_total",
 	"ec_rezip_completion_new_records_total",
 	"ec_rezip_completion_new_record_size_bytes_total",
 
+	// coro
 	"coro_schedule_soft_limit_useconds_total",
 	"coro_schedule_hard_limit_useconds_total",
 	"coro_schedule_plan_useconds_total",
+}
+
+/*
+The evict section's developer tier is emitted by eallocator.c and evict.c
+rather than engula_debug.c, and those two already write the engula_ prefix, so
+these pass through unchanged instead of picking it up here.
+
+They are the forecast controller's own pacing state: EWMA rates that read 0
+while the forecast gate is shut, and a time-to-wall that is -1 when inactive.
+Neither is interpretable without the control law, which is why they are not in
+the user tier.
+*/
+
+var engulaDebugPrefixedGauges = []string{
+	"engula_forecast_inflow_bytes_per_second",
+	"engula_forecast_reclaim_bytes_per_second",
+	"engula_forecast_target_bytes_per_second",
+}
+
+var engulaDebugPrefixedCounters = []string{
+	"engula_evict_forecast_keys_total",
 }
 
 // Per-bucket gauges the server flattens into the metric name.
@@ -223,6 +261,9 @@ func (e *Exporter) registEngulaMetrics() {
 		e.metricMapCounters[name] = name
 	}
 	for src, conv := range engulaUnitConversions {
+		if conv.debug && !e.options.InclEngulaDebugMetrics {
+			continue
+		}
 		if strings.HasSuffix(src, "_total") {
 			e.metricMapCounters[src] = conv.name
 		} else {
@@ -234,6 +275,12 @@ func (e *Exporter) registEngulaMetrics() {
 		return
 	}
 
+	for _, name := range engulaDebugPrefixedGauges {
+		e.metricMapGauges[name] = name
+	}
+	for _, name := range engulaDebugPrefixedCounters {
+		e.metricMapCounters[name] = name
+	}
 	for _, name := range engulaDebugGauges {
 		e.metricMapGauges[name] = engulaDebugPrefix + name
 	}

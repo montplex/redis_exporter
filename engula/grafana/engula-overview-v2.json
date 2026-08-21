@@ -12,6 +12,12 @@
   "__elements": {},
   "__requires": [
     {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
@@ -46,7 +52,7 @@
       }
     ]
   },
-  "description": "Memory behaviour of a valkey-engula instance: how much the arena holds, how densely it is packed, and how fast Engula is reclaiming. Built entirely on the stable metric tier, so it needs no extra exporter flags.",
+  "description": "Everything ENGULA INFO publishes at the user tier, one row per section: how much memory the arena holds, whether the background pipeline keeps up, how close eviction is, whether the last load was clean, and what the engine costs the main thread. Needs no extra exporter flags.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -117,7 +123,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -168,8 +174,6 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_arena_block_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "hide": false,
-          "instant": false,
           "legendFormat": "Arena blocks, {{instance}}",
           "range": true,
           "refId": "B"
@@ -181,8 +185,6 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_arena_record_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "hide": false,
-          "instant": false,
           "legendFormat": "Live records, {{instance}}",
           "range": true,
           "refId": "C"
@@ -196,7 +198,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "`Recyclable` is memory Engula has identified as reclaimable but has not reclaimed yet; `Recycling` is memory currently moving through reclamation. A `Recyclable` line that keeps climbing means reclamation is falling behind.",
+      "description": "The two pressure ratios Engula publishes: `Usage` for memory consumption and `Defrag` for fragmentation. They drive how aggressively reclamation runs — the higher they sit, the more work Engula is doing in the background.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -208,11 +210,12 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 1,
             "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 15,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -242,11 +245,11 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -256,7 +259,7 @@
         "x": 12,
         "y": 1
       },
-      "id": 19,
+      "id": 21,
       "options": {
         "legend": {
           "calcs": [
@@ -281,8 +284,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_recyclable_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "Recyclable, {{instance}}",
+          "expr": "redis_engula_mem_usage_pressure_ratio{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Usage, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -292,15 +295,13 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_recycling_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Recycling, {{instance}}",
+          "expr": "redis_engula_mem_defrag_pressure_ratio{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Defrag, {{instance}}",
           "range": true,
           "refId": "B"
         }
       ],
-      "title": "Memory Reclamation",
+      "title": "Pressure Ratios",
       "type": "timeseries"
     },
     {
@@ -354,7 +355,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -454,7 +455,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -553,7 +554,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -653,7 +654,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -691,15 +692,11 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "disableTextWrap": false,
           "editorMode": "code",
           "expr": "redis_engula_arena_record_bytes{namespace=~\"$namespace\", instance=~\"$instance\"} / (redis_engula_arena_records{namespace=~\"$namespace\", instance=~\"$instance\"} > 0)",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
           "legendFormat": "{{instance}}",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
       "title": "Avg. Record Size",
@@ -715,7 +712,7 @@
       },
       "id": 20,
       "panels": [],
-      "title": "Reclamation",
+      "title": "Pipeline",
       "type": "row"
     },
     {
@@ -723,7 +720,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The two pressure ratios Engula publishes: `Usage` for memory consumption and `Defrag` for fragmentation. They drive how aggressively reclamation runs — the higher they sit, the more work Engula is doing in the background.",
+      "description": "`Attempted` minus `Created` is what never became a task. `Inline urgent` is the queue being full at creation, `Inline main thread` is the io threads not draining it afterwards — back-pressure versus throughput, so they are not summed.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -735,7 +732,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMax": 1,
             "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
@@ -770,28 +766,28 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "ops"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 8,
         "x": 0,
         "y": 26
       },
-      "id": 21,
+      "id": 26,
       "options": {
         "legend": {
           "calcs": [
             "lastNotNull",
             "max"
           ],
-          "displayMode": "table",
+          "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
@@ -809,8 +805,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_mem_usage_pressure_ratio{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "Usage, {{instance}}",
+          "expr": "rate(redis_engula_zip_tasks_attempted_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Attempted, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -820,13 +816,35 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_mem_defrag_pressure_ratio{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "Defrag, {{instance}}",
+          "expr": "rate(redis_engula_zip_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Created, {{instance}}",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_zip_inline_urgent_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Inline urgent, {{instance}}",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_zip_inline_main_thread_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Inline main thread, {{instance}}",
+          "range": true,
+          "refId": "D"
         }
       ],
-      "title": "Pressure Ratios",
+      "title": "Zip Tasks",
       "type": "timeseries"
     },
     {
@@ -834,7 +852,612 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Work pending in each stage of Engula's background pipeline: compression (`Zip`), recompression (`Rezip`), defragmentation, and the two queues that hand finished work back. Queues that stay long mean the pipeline is not draining as fast as work arrives.",
+      "description": "`Attempted` minus `Created` is what never became a task. `Inline urgent` is the queue being full at creation, `Inline main thread` is the io threads not draining it afterwards — back-pressure versus throughput, so they are not summed. Rezip has no inline-urgent path: a full queue gates creation instead, so `Created` is already the queued count. Its `Attempted` ticks on the 100ms cron whether or not there is anything to do, so read `Created / Attempted` as a hit rate.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 26
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_rezip_tasks_attempted_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Attempted, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_rezip_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Created, {{instance}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_rezip_inline_main_thread_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Inline main thread, {{instance}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Rezip Tasks",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "`Attempted` minus `Created` is what never became a task. `Inline urgent` is the queue being full at creation, `Inline main thread` is the io threads not draining it afterwards — back-pressure versus throughput, so they are not summed. Defrag names its two failure reasons, so `Attempted = Created + Threshold + Insufficient`.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 26
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_tasks_attempted_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Attempted, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Created, {{instance}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_tasks_skipped_threshold_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Threshold, {{instance}}",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_tasks_skipped_insufficient_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Insufficient, {{instance}}",
+          "range": true,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_inline_urgent_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Inline urgent, {{instance}}",
+          "range": true,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_inline_main_thread_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Inline main thread, {{instance}}",
+          "range": true,
+          "refId": "F"
+        }
+      ],
+      "title": "Defrag Tasks",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Bytes per second in and out of zip passes. The gap between `Retired` and `Produced` is what this stage gives back.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 34
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_zip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Retired, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_zip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Produced, {{instance}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Zip Bytes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Bytes per second in and out of rezip passes. The gap between `Retired` and `Produced` is what this stage gives back.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 34
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_rezip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Retired, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_rezip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Produced, {{instance}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Rezip Bytes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Bytes per second in and out of defrag passes. The gap between `Retired` and `Produced` is what this stage gives back.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 34
+      },
+      "id": 31,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Retired, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Produced, {{instance}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Defrag Bytes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Work pending in each stage, plus the tasks accepted and not yet finished. Long queues with low in-flight means the pipeline is not picking work up; both high means it is picking it up but not finishing.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -880,7 +1503,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -890,9 +1513,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 26
+        "w": 24,
+        "x": 0,
+        "y": 42
       },
       "id": 22,
       "options": {
@@ -967,17 +1590,41 @@
           "legendFormat": "Slow completion, {{instance}}",
           "range": true,
           "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_tasks_inflight{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "In flight, {{instance}}",
+          "range": true,
+          "refId": "F"
         }
       ],
       "title": "Queue Lengths",
       "type": "timeseries"
     },
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 50
+      },
+      "id": 32,
+      "panels": [],
+      "title": "Evict",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Bytes per second moving through defragmentation: `Retired` out of the blocks being retired, `Produced` into the blocks it writes in their place.",
+      "description": "`Recyclable` is memory Engula has identified as reclaimable but has not reclaimed yet; `Recycling` is memory currently moving through reclamation. A `Recyclable` line that keeps climbing means reclamation is falling behind.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -993,7 +1640,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 10,
+            "fillOpacity": 15,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1023,11 +1670,11 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "binBps"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -1035,9 +1682,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 51
       },
-      "id": 23,
+      "id": 19,
       "options": {
         "legend": {
           "calcs": [
@@ -1062,8 +1709,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Retired, {{instance}}",
+          "expr": "redis_engula_recyclable_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Recyclable, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -1073,13 +1720,13 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Produced, {{instance}}",
+          "expr": "redis_engula_recycling_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Recycling, {{instance}}",
           "range": true,
           "refId": "B"
         }
       ],
-      "title": "Defrag Throughput",
+      "title": "Memory Reclamation",
       "type": "timeseries"
     },
     {
@@ -1087,7 +1734,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The rates Engula forecasts for the arena: `Inflow` is memory arriving, `Reclaim` is memory being handed back, and `Target` is the reclaim rate Engula is steering towards. Inflow sitting above Reclaim means the footprint is still growing.",
+      "description": "How often the eviction timer is armed, and what forced an urgent defragmentation pass. The two urgent lines split by call site, not by caller: `Timer` is evictionTimeProc's spin loop, `Recycle` is performEvictions' tail — a timer tick can raise both.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1133,11 +1780,11 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "binBps"
+          "unit": "ops"
         },
         "overrides": []
       },
@@ -1145,9 +1792,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 34
+        "y": 51
       },
-      "id": 24,
+      "id": 33,
       "options": {
         "legend": {
           "calcs": [
@@ -1172,8 +1819,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_forecast_inflow_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "Inflow, {{instance}}",
+          "expr": "rate(redis_engula_evict_timer_starts_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Timer starts, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -1183,8 +1830,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_forecast_reclaim_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "Reclaim, {{instance}}",
+          "expr": "rate(redis_engula_evict_urgent_defrag_timer_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Urgent defrag (timer), {{instance}}",
           "range": true,
           "refId": "B"
         },
@@ -1194,14 +1841,706 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_forecast_target_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "Target, {{instance}}",
+          "expr": "rate(redis_engula_evict_urgent_defrag_recycle_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Urgent defrag (recycle), {{instance}}",
           "range": true,
           "refId": "C"
         }
       ],
-      "title": "Inflow vs Reclaim",
+      "title": "Eviction Activity",
       "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 59
+      },
+      "id": 35,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Records the last RDB load walked. Per-load snapshots, not counters — they can decrease.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 60
+          },
+          "id": 36,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "redis_engula_rdb_last_load_checked{namespace=~\"$namespace\", instance=~\"$instance\"}",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Records Checked",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Records the last RDB load discarded. Anything above zero means the logical keyspace changed and a FULLRESYNC was forced — the one alert line in the user tier.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 60
+          },
+          "id": 37,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "redis_engula_rdb_last_load_dropped{namespace=~\"$namespace\", instance=~\"$instance\"}",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Records Dropped",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Orphaned records cleaned up during the load. Expected behaviour, not an error.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 12,
+            "y": 60
+          },
+          "id": 38,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "redis_engula_rdb_last_load_orphans_reclaimed{namespace=~\"$namespace\", instance=~\"$instance\"}",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Orphans Reclaimed",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "How the last RDB load ran and why. This is the context for reading `Records Dropped`: reason=marker-manual is a deliberate verification reload, totals-dirty is a footer mismatch.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 18,
+            "y": 60
+          },
+          "id": 39,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "name",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "redis_engula_rdb_last_load_info{namespace=~\"$namespace\", instance=~\"$instance\"}",
+              "legendFormat": "{{mode}} / {{reason}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Load Mode / Reason",
+          "type": "stat"
+        }
+      ],
+      "title": "Health",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 60
+      },
+      "id": 40,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Seconds of main-thread time Engula uses per second — the share of the request path the engine costs. This is the only measured time in this section; the scheduler's limits are budgets, not consumption.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 61
+          },
+          "id": 41,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "rate(redis_engula_coro_run_seconds_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Main Thread Share",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Coroutine scheduling rounds per second.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "ops"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 61
+          },
+          "id": 42,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "rate(redis_engula_coro_schedule_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Schedule Rate",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Current coroutine busy level. The reported value is not capped — the scheduler clamps to 10 internally, but this reports what it saw.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 69
+          },
+          "id": 43,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "redis_engula_coro_busy_level{namespace=~\"$namespace\", instance=~\"$instance\"}",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Busy Level",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "description": "Measured run time divided by scheduling rounds — how long an average round actually takes.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 69
+          },
+          "id": 44,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "rate(redis_engula_coro_run_seconds_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / (rate(redis_engula_coro_schedule_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) > 0)",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Avg. Time per Schedule",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Coro",
+      "type": "row"
     }
   ],
   "refresh": "1m",
@@ -1265,6 +2604,6 @@
   "timezone": "browser",
   "title": "Engula Overview",
   "uid": "856c2349-f7b6-411b-b7a3-852b4002d282",
-  "version": 6,
+  "version": 15,
   "weekStart": ""
 }

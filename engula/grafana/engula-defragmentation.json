@@ -116,7 +116,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "description": "Server memory from Valkey's own accounting: `zmalloc` is everything allocated, `logic` subtracts what maxmemory does not count, and `mutable_blocks` is the arena zone still being written into.",
+          "description": "Server memory from Valkey's own accounting: `zmalloc` is everything allocated and `logic` subtracts what maxmemory does not count.",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -162,7 +162,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -223,19 +223,6 @@
               "range": true,
               "refId": "B",
               "useBackend": false
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
-              },
-              "editorMode": "code",
-              "expr": "redis_engula_arena_mutable_zone_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
-              "hide": false,
-              "instant": false,
-              "legendFormat": "mutable_blocks,{{instance}}",
-              "range": true,
-              "refId": "C"
             }
           ],
           "title": "Memory Used",
@@ -292,7 +279,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -394,7 +381,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -494,7 +481,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -557,6 +544,878 @@
       },
       "id": 51,
       "panels": [],
+      "title": "Pressure & Triggers",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMax": 1,
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_mem_usage_pressure_ratio{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Usage, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_mem_defrag_pressure_ratio{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Defrag, {{instance}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Defrag Drivers",
+      "type": "timeseries",
+      "description": "The two signals that pace defragmentation. `Defrag` is the fragmentation signal — it is what compaction can actually act on. `Usage` is how close the instance is to maxmemory. Defrag work tracking `Usage` while `Defrag` sits at zero means passes are being driven by a condition compaction cannot fix: the memory is genuinely full, not fragmented."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_evict_urgent_defrag_timer_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Urgent defrag (timer), {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_evict_urgent_defrag_recycle_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Urgent defrag (recycle), {{instance}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_evict_timer_starts_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Timer starts, {{instance}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Eviction Triggers",
+      "type": "timeseries",
+      "description": "What forces an urgent defragmentation pass. The two urgent lines split by call site: `Timer` is evictionTimeProc's spin loop, `Recycle` is the engula_mem_recycle branch at the tail of performEvictions. A timer tick can raise both."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / ((rate(redis_engula_evict_urgent_defrag_timer_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) + rate(redis_engula_evict_urgent_defrag_recycle_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])) > 0)",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Tasks per Trigger",
+      "type": "timeseries",
+      "description": "Defragmentation tasks created per urgent trigger. One eviction pass can drive many task creations, so this is the amplification between the eviction path and the work it sets off."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_recyclable_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Recyclable, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_recycling_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Recycling, {{instance}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Reclaimable Memory",
+      "type": "timeseries",
+      "description": "`Recyclable` is memory identified as reclaimable but not reclaimed yet; `Recycling` is memory moving through reclamation. Both at zero while defrag runs hard means there is nothing left for it to recover — the arena is full rather than fragmented."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_inflow_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Inflow, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_reclaim_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Reclaim, {{instance}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_target_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Target, {{instance}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Forecast Rates",
+      "type": "timeseries",
+      "description": "The forecast controller's own pacing state, not the instance's: `Inflow` and `Reclaim` are EWMAs rather than instantaneous rates, and all three read 0 while the forecast gate is shut — a flat zero here does not mean nothing is happening. `Target` is the reclaim rate it is steering towards."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "id": 25,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_time_to_wall_seconds{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Time to Wall",
+      "type": "timeseries",
+      "description": "How long the controller projects until memory hits the wall. The server reports -1 while the forecast is inactive and the exporter drops negatives, so an inactive controller shows as a gap rather than as a value."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_evict_forecast_keys_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Forecast Keys",
+      "type": "timeseries",
+      "description": "Keys the eviction forecaster has walked."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_evict_timer_active{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Eviction Timer Active",
+      "type": "timeseries",
+      "description": "Whether the eviction timer is currently armed (1) or idle (0)."
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 52,
+      "panels": [],
       "title": "Block Distribution",
       "type": "row"
     },
@@ -576,7 +1435,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -588,9 +1447,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 4
+        "y": 37
       },
-      "id": 20,
+      "id": 28,
       "options": {
         "displayMode": "gradient",
         "legend": {
@@ -626,7 +1485,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket0_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket0",
+          "legendFormat": "0-20%",
           "range": false,
           "refId": "A"
         },
@@ -639,7 +1498,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket1_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket1",
+          "legendFormat": "20-40%",
           "range": false,
           "refId": "B"
         },
@@ -652,7 +1511,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket2_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket2",
+          "legendFormat": "40-60%",
           "range": false,
           "refId": "C"
         },
@@ -665,7 +1524,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket3_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket3",
+          "legendFormat": "60-80%",
           "range": false,
           "refId": "D"
         },
@@ -678,7 +1537,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket4_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket4",
+          "legendFormat": "80-85%",
           "range": false,
           "refId": "E"
         },
@@ -691,7 +1550,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket5_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket5",
+          "legendFormat": "85-86%",
           "range": false,
           "refId": "F"
         },
@@ -704,7 +1563,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket6_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket6",
+          "legendFormat": "86-87%",
           "range": false,
           "refId": "G"
         },
@@ -717,7 +1576,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket7_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket7",
+          "legendFormat": "87-88%",
           "range": false,
           "refId": "H"
         },
@@ -730,7 +1589,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket8_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket8",
+          "legendFormat": "88-89%",
           "range": false,
           "refId": "I"
         },
@@ -743,7 +1602,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket9_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket9",
+          "legendFormat": "89-90%",
           "range": false,
           "refId": "J"
         },
@@ -756,7 +1615,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket10_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket10",
+          "legendFormat": "90-91%",
           "range": false,
           "refId": "K"
         },
@@ -769,7 +1628,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket11_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket11",
+          "legendFormat": "91-92%",
           "range": false,
           "refId": "L"
         },
@@ -782,7 +1641,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket12_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket12",
+          "legendFormat": "92-93%",
           "range": false,
           "refId": "M"
         },
@@ -795,7 +1654,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket13_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket13",
+          "legendFormat": "93-94%",
           "range": false,
           "refId": "N"
         },
@@ -808,7 +1667,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket14_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket14",
+          "legendFormat": "94-95%",
           "range": false,
           "refId": "O"
         },
@@ -821,14 +1680,14 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket15_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket15",
+          "legendFormat": "95-100%",
           "range": false,
           "refId": "P"
         }
       ],
       "title": "Current Fill Rate",
       "type": "bargauge",
-      "description": "Blocks grouped by how full they are, right now. Weight sitting in the low buckets is what defragmentation exists to compact. Series are labelled by bucket index: the server publishes 16 buckets and does not publish their boundaries."
+      "description": "Blocks grouped by how full they are, right now. Buckets are the arena's own fill-rate ranges (earena.h): coarse below 80%, then 1% wide up to 95%, and a [95%, 100%] catch-all that is never a defrag candidate. Weight in the low buckets is what defragmentation exists to compact."
     },
     {
       "datasource": {
@@ -880,7 +1739,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -892,9 +1751,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 4
+        "y": 37
       },
-      "id": 21,
+      "id": 29,
       "options": {
         "legend": {
           "calcs": [],
@@ -917,7 +1776,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket0_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket0, {{instance}}",
+          "legendFormat": "0-20%, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -928,7 +1787,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket1_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket1, {{instance}}",
+          "legendFormat": "20-40%, {{instance}}",
           "range": true,
           "refId": "B"
         },
@@ -939,7 +1798,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket2_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket2, {{instance}}",
+          "legendFormat": "40-60%, {{instance}}",
           "range": true,
           "refId": "C"
         },
@@ -950,7 +1809,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket3_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket3, {{instance}}",
+          "legendFormat": "60-80%, {{instance}}",
           "range": true,
           "refId": "D"
         },
@@ -961,7 +1820,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket4_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket4, {{instance}}",
+          "legendFormat": "80-85%, {{instance}}",
           "range": true,
           "refId": "E"
         },
@@ -972,7 +1831,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket5_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket5, {{instance}}",
+          "legendFormat": "85-86%, {{instance}}",
           "range": true,
           "refId": "F"
         },
@@ -983,7 +1842,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket6_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket6, {{instance}}",
+          "legendFormat": "86-87%, {{instance}}",
           "range": true,
           "refId": "G"
         },
@@ -994,7 +1853,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket7_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket7, {{instance}}",
+          "legendFormat": "87-88%, {{instance}}",
           "range": true,
           "refId": "H"
         },
@@ -1005,7 +1864,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket8_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket8, {{instance}}",
+          "legendFormat": "88-89%, {{instance}}",
           "range": true,
           "refId": "I"
         },
@@ -1016,7 +1875,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket9_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket9, {{instance}}",
+          "legendFormat": "89-90%, {{instance}}",
           "range": true,
           "refId": "J"
         },
@@ -1027,7 +1886,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket10_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket10, {{instance}}",
+          "legendFormat": "90-91%, {{instance}}",
           "range": true,
           "refId": "K"
         },
@@ -1038,7 +1897,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket11_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket11, {{instance}}",
+          "legendFormat": "91-92%, {{instance}}",
           "range": true,
           "refId": "L"
         },
@@ -1049,7 +1908,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket12_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket12, {{instance}}",
+          "legendFormat": "92-93%, {{instance}}",
           "range": true,
           "refId": "M"
         },
@@ -1060,7 +1919,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket13_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket13, {{instance}}",
+          "legendFormat": "93-94%, {{instance}}",
           "range": true,
           "refId": "N"
         },
@@ -1071,7 +1930,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket14_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket14, {{instance}}",
+          "legendFormat": "94-95%, {{instance}}",
           "range": true,
           "refId": "O"
         },
@@ -1082,14 +1941,124 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket15_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket15, {{instance}}",
+          "legendFormat": "95-100%, {{instance}}",
           "range": true,
           "refId": "P"
         }
       ],
       "title": "Fill Rate Over Time",
       "type": "timeseries",
-      "description": "The same distribution over time, stacked. Weight migrating from the high buckets down to the low ones is fragmentation building up; the reverse is defragmentation winning."
+      "description": "The same distribution over time, stacked. Weight migrating down towards the coarse low buckets is fragmentation building up; the reverse is defragmentation winning."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 45
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_defrag_fill_rate_bucket0_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket1_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket2_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket3_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket4_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket5_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket6_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket7_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket8_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket9_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket10_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket11_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket12_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket13_blocks{namespace=~\"$namespace\", instance=~\"$instance\"} + redis_engula_defrag_fill_rate_bucket14_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Candidates (<95%), {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_defrag_fill_rate_bucket15_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Never a candidate (95-100%), {{instance}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Defrag Candidate Blocks",
+      "type": "timeseries",
+      "description": "Blocks split at the boundary defragmentation actually uses. earena_defrag_task_create() asserts the [95%, 100%] catch-all is never a candidate, so `Candidates` is the entire pool compaction may draw from. A candidate line pinned at zero while tasks are still being created means candidates are appearing and being consumed inside one scrape interval."
     },
     {
       "datasource": {
@@ -1141,7 +2110,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1152,14 +2121,17 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 12
+        "x": 12,
+        "y": 45
       },
-      "id": 22,
+      "id": 31,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -1199,121 +2171,14 @@
       "description": "Blocks the arena is still writing into (`Mutable`) against blocks sealed and queued for reclamation (`Recycling`)."
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            },
-            "axisSoftMin": 0
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 12
-      },
-      "id": 23,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_completion_old_blocks_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Before, {{instance}}",
-          "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_completion_new_blocks_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "After, {{instance}}",
-          "range": true,
-          "refId": "B"
-        }
-      ],
-      "title": "Blocks per Task",
-      "type": "timeseries",
-      "description": "Blocks consumed and produced per completed defragmentation task. `After` staying well below `Before` is the compaction ratio each pass achieves."
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 53
       },
-      "id": 52,
+      "id": 53,
       "panels": [],
       "title": "Task Lifecycle",
       "type": "row"
@@ -1368,7 +2233,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1380,13 +2245,16 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 54
       },
-      "id": 24,
+      "id": 32,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -1404,8 +2272,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_task_create_requests_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Requested, {{instance}}",
+          "expr": "rate(redis_engula_defrag_tasks_attempted_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Attempted, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -1419,11 +2287,33 @@
           "legendFormat": "Created, {{instance}}",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_tasks_skipped_threshold_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Threshold, {{instance}}",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_tasks_skipped_insufficient_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Insufficient, {{instance}}",
+          "range": true,
+          "refId": "D"
         }
       ],
       "title": "Task Creation",
       "type": "timeseries",
-      "description": "Defragmentation tasks requested against tasks actually created. A gap between the two means requests are being rejected before a task exists."
+      "description": "Every call into task creation, and what came of it. `Threshold` is incremented when every bucket up to the cap is empty — there was nothing worth compacting; `Insufficient` is a claim truncated to a single block. The three outcomes sum to `Attempted`."
     },
     {
       "datasource": {
@@ -1467,6 +2357,7 @@
             "thresholdsStyle": {
               "mode": "off"
             },
+            "axisSoftMax": 1,
             "axisSoftMin": 0
           },
           "mappings": [],
@@ -1475,11 +2366,11 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "ops"
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -1487,13 +2378,16 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 21
+        "y": 54
       },
-      "id": 25,
+      "id": 33,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -1511,26 +2405,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_tasks_skipped_threshold_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Threshold, {{instance}}",
+          "expr": "rate(redis_engula_defrag_tasks_skipped_threshold_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / (rate(redis_engula_defrag_tasks_attempted_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) > 0)",
+          "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_tasks_skipped_insufficient_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Insufficient, {{instance}}",
-          "range": true,
-          "refId": "B"
         }
       ],
-      "title": "Task Skips",
+      "title": "Candidate Availability",
       "type": "timeseries",
-      "description": "Requests dropped without creating a task: `Threshold` when the block was not fragmented enough to be worth it, `Insufficient` when there was not enough material to build a task from."
+      "description": "Share of attempts that found no candidate at all. Climbing towards 1.0 means the arena has run out of blocks worth compacting, and the attempts are pure overhead."
     },
     {
       "datasource": {
@@ -1582,7 +2465,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1594,13 +2477,16 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 29
+        "y": 62
       },
-      "id": 26,
+      "id": 34,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -1618,8 +2504,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_inline_main_thread_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Main thread, {{instance}}",
+          "expr": "rate(redis_engula_defrag_inline_urgent_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Inline urgent, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -1629,15 +2515,26 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_inline_urgent_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Urgent, {{instance}}",
+          "expr": "rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) - rate(redis_engula_defrag_inline_urgent_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Queued, {{instance}}",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_inline_main_thread_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Inline main thread, {{instance}}",
+          "range": true,
+          "refId": "C"
         }
       ],
-      "title": "Inline Fallbacks",
+      "title": "Execution Path",
       "type": "timeseries",
-      "description": "Defragmentation done outside the background pipeline. `Main thread` work lands on the request path and shows up as latency; `Urgent` is the forced path taken under memory pressure."
+      "description": "Where created tasks actually run. `Inline urgent` never enters the queue and executes on the main thread at creation; `Queued` is created minus inline urgent; `Inline main thread` is queued work the io threads did not drain, pulled back by a main-thread coroutine. All of the work sitting on `Inline urgent` means the async path is unused and every pass is on the request path."
     },
     {
       "datasource": {
@@ -1689,7 +2586,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1701,13 +2598,16 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 29
+        "y": 62
       },
-      "id": 27,
+      "id": 35,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -1725,15 +2625,26 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_task_create_succ_blocks_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "{{instance}}",
+          "expr": "redis_engula_defrag_queue_length{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Queue, {{instance}}",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_tasks_inflight{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "In flight, {{instance}}",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Blocks Selected per Task",
+      "title": "Queue Depth",
       "type": "timeseries",
-      "description": "Blocks successfully picked up per created task — how much material each pass gets to work with."
+      "description": "Work pending in the defrag queue and tasks accepted but not yet finished. Both flat at zero alongside a busy Execution Path confirms the queue is being bypassed rather than drained quickly."
     },
     {
       "collapsed": false,
@@ -1741,9 +2652,9 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 70
       },
-      "id": 53,
+      "id": 54,
       "panels": [],
       "title": "Completion Accounting",
       "type": "row"
@@ -1798,7 +2709,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1810,13 +2721,16 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 38
+        "y": 71
       },
-      "id": 28,
+      "id": 36,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -1905,7 +2819,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1917,13 +2831,16 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 38
+        "y": 71
       },
-      "id": 29,
+      "id": 37,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -2012,7 +2929,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2024,13 +2941,16 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 46
+        "y": 79
       },
-      "id": 30,
+      "id": 38,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -2119,11 +3039,11 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "binBps"
+          "unit": "short"
         },
         "overrides": []
       },
@@ -2131,13 +3051,16 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 46
+        "y": 79
       },
-      "id": 31,
+      "id": 39,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -2155,8 +3078,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) - rate(redis_engula_defrag_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Net, {{instance}}",
+          "expr": "rate(redis_engula_defrag_completion_old_blocks_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Before, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -2166,10 +3089,209 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Retired, {{instance}}",
+          "expr": "rate(redis_engula_defrag_completion_new_blocks_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / rate(redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "After, {{instance}}",
           "range": true,
           "refId": "B"
+        }
+      ],
+      "title": "Blocks per Task",
+      "type": "timeseries",
+      "description": "Blocks consumed and produced per completed defragmentation task. `After` staying well below `Before` is the compaction ratio each pass achieves."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMax": 1,
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 87
+      },
+      "id": 40,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "1 - rate(redis_engula_defrag_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / (rate(redis_engula_defrag_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) > 0)",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Defrag Yield",
+      "type": "timeseries",
+      "description": "Share of the bytes a pass moves that it actually recovers, as 1 − produced/retired. This is the return on the work: a low yield with a high task rate means compaction is rewriting memory for very little gain."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 87
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "rate(redis_engula_defrag_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Moved, {{instance}}",
+          "range": true,
+          "refId": "A"
         },
         {
           "datasource": {
@@ -2177,15 +3299,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Produced, {{instance}}",
+          "expr": "rate(redis_engula_defrag_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) - rate(redis_engula_defrag_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Recovered, {{instance}}",
           "range": true,
-          "refId": "C"
+          "refId": "B"
         }
       ],
-      "title": "Net Reclaimed",
+      "title": "Work vs Return",
       "type": "timeseries",
-      "description": "Bytes retired minus bytes produced — what defragmentation actually gives back. Sustained time at or below zero means passes are running without recovering anything."
+      "description": "Bytes moved per second against bytes recovered per second. The distance between the two lines is the cost of the compaction; they converge only when a pass is recovering nearly everything it touches."
     },
     {
       "collapsed": false,
@@ -2193,11 +3315,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 95
       },
-      "id": 54,
+      "id": 55,
       "panels": [],
-      "title": "Eviction Triggers",
+      "title": "Consistency",
       "type": "row"
     },
     {
@@ -2216,117 +3338,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ops"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 55
-      },
-      "id": 32,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_engula_evict_urgent_defrag_timer_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "evict_timer,{{instance}}",
-          "range": true,
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_engula_evict_urgent_defrag_wall_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "evict_func,{{instance}}",
-          "range": true,
-          "refId": "E"
-        }
-      ],
-      "title": "Urgent Defrag Triggers",
-      "type": "timeseries",
-      "description": "What forced an urgent defragmentation pass: the eviction timer firing, or the eviction path hitting the memory wall inline."
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -2361,103 +3372,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ops"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 55
-      },
-      "id": 33,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "rate(redis_engula_evict_timer_starts_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "{{instance}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Evict Timer Starts",
-      "type": "timeseries",
-      "description": "How often the eviction timer is armed."
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            },
-            "axisSoftMin": 0
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2469,13 +3384,16 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 63
+        "y": 96
       },
-      "id": 34,
+      "id": 42,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -2493,15 +3411,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_engula_evict_timer_active{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "expr": "redis_engula_defrag_tasks_attempted_total{namespace=~\"$namespace\", instance=~\"$instance\"} - redis_engula_defrag_tasks_created_total{namespace=~\"$namespace\", instance=~\"$instance\"} - redis_engula_defrag_tasks_skipped_threshold_total{namespace=~\"$namespace\", instance=~\"$instance\"} - redis_engula_defrag_tasks_skipped_insufficient_total{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Evict Timer Active",
+      "title": "Task Accounting",
       "type": "timeseries",
-      "description": "Whether the eviction timer is currently armed (1) or idle (0)."
+      "description": "`Attempted − created − threshold − insufficient`. Every call into task creation ends in exactly one of the three outcomes, so this belongs at zero. A standing offset is a counting bug, not a workload change."
     },
     {
       "datasource": {
@@ -2553,11 +3471,11 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "ops"
+          "unit": "short"
         },
         "overrides": []
       },
@@ -2565,13 +3483,16 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 63
+        "y": 96
       },
-      "id": 35,
+      "id": 43,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -2589,15 +3510,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_evict_forecast_keys_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "expr": "redis_engula_defrag_task_create_succ_blocks_total{namespace=~\"$namespace\", instance=~\"$instance\"} - redis_engula_defrag_completion_old_blocks_total{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Forecast Keys",
+      "title": "Block Accounting",
       "type": "timeseries",
-      "description": "Keys the eviction forecaster has walked."
+      "description": "Blocks claimed at creation minus blocks the completions report consuming. Every claimed block must reach a completion, so this belongs at zero; a growing gap means tasks are being dropped between claim and completion."
     }
   ],
   "refresh": "30s",
@@ -2664,5 +3585,5 @@
   "uid": "aetaajr2nqs5cb",
   "version": 22,
   "weekStart": "",
-  "description": "Developer-tier view of Engula's defragmentation: which blocks are candidates, what the tasks do to them, and what triggers an urgent pass. Requires the exporter to run with --include-engula-debug-metrics."
+  "description": "Developer-tier view of Engula's defragmentation: what drives it, whether there are candidates to act on, where the passes run, what they return, and two invariants that catch counting bugs. Requires the exporter to run with --include-engula-debug-metrics."
 }
