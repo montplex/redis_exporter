@@ -116,7 +116,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "description": "Server memory from Valkey's own accounting: `zmalloc` is everything allocated, `logic` subtracts what maxmemory does not count, and `mutable_blocks` is the arena zone still being written into.",
+          "description": "Server memory from Valkey's own accounting: `zmalloc` is everything allocated and `logic` subtracts what maxmemory does not count.",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -162,7 +162,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -223,19 +223,6 @@
               "range": true,
               "refId": "B",
               "useBackend": false
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
-              },
-              "editorMode": "code",
-              "expr": "redis_engula_arena_mutable_zone_bytes{namespace=~\"$namespace\", instance=~\"$instance\"}",
-              "hide": false,
-              "instant": false,
-              "legendFormat": "mutable_blocks,{{instance}}",
-              "range": true,
-              "refId": "C"
             }
           ],
           "title": "Memory Used",
@@ -292,7 +279,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -394,7 +381,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -494,7 +481,7 @@
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
@@ -576,7 +563,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -626,7 +613,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket0_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket0",
+          "legendFormat": "0-20%",
           "range": false,
           "refId": "A"
         },
@@ -639,7 +626,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket1_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket1",
+          "legendFormat": "20-40%",
           "range": false,
           "refId": "B"
         },
@@ -652,7 +639,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket2_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket2",
+          "legendFormat": "40-60%",
           "range": false,
           "refId": "C"
         },
@@ -665,7 +652,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket3_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket3",
+          "legendFormat": "60-80%",
           "range": false,
           "refId": "D"
         },
@@ -678,7 +665,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket4_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket4",
+          "legendFormat": "80-85%",
           "range": false,
           "refId": "E"
         },
@@ -691,7 +678,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket5_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket5",
+          "legendFormat": "85-86%",
           "range": false,
           "refId": "F"
         },
@@ -704,7 +691,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket6_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket6",
+          "legendFormat": "86-87%",
           "range": false,
           "refId": "G"
         },
@@ -717,7 +704,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket7_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket7",
+          "legendFormat": "87-88%",
           "range": false,
           "refId": "H"
         },
@@ -730,7 +717,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket8_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket8",
+          "legendFormat": "88-89%",
           "range": false,
           "refId": "I"
         },
@@ -743,7 +730,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket9_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket9",
+          "legendFormat": "89-90%",
           "range": false,
           "refId": "J"
         },
@@ -756,7 +743,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket10_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket10",
+          "legendFormat": "90-91%",
           "range": false,
           "refId": "K"
         },
@@ -769,7 +756,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket11_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket11",
+          "legendFormat": "91-92%",
           "range": false,
           "refId": "L"
         },
@@ -782,7 +769,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket12_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket12",
+          "legendFormat": "92-93%",
           "range": false,
           "refId": "M"
         },
@@ -795,7 +782,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket13_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket13",
+          "legendFormat": "93-94%",
           "range": false,
           "refId": "N"
         },
@@ -808,7 +795,7 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket14_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket14",
+          "legendFormat": "94-95%",
           "range": false,
           "refId": "O"
         },
@@ -821,14 +808,14 @@
           "exemplar": false,
           "expr": "redis_engula_defrag_fill_rate_bucket15_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "instant": true,
-          "legendFormat": "bucket15",
+          "legendFormat": "95-100%",
           "range": false,
           "refId": "P"
         }
       ],
       "title": "Current Fill Rate",
       "type": "bargauge",
-      "description": "Blocks grouped by how full they are, right now. Weight sitting in the low buckets is what defragmentation exists to compact. Series are labelled by bucket index: the server publishes 16 buckets and does not publish their boundaries."
+      "description": "Blocks grouped by how full they are, right now. Buckets are the arena's own fill-rate ranges (earena.h): coarse below 80%, then 1% wide up to 95%, and a [95%, 100%] catch-all that is never a defrag candidate. Weight in the low buckets is what defragmentation exists to compact."
     },
     {
       "datasource": {
@@ -880,7 +867,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -917,7 +904,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket0_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket0, {{instance}}",
+          "legendFormat": "0-20%, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -928,7 +915,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket1_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket1, {{instance}}",
+          "legendFormat": "20-40%, {{instance}}",
           "range": true,
           "refId": "B"
         },
@@ -939,7 +926,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket2_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket2, {{instance}}",
+          "legendFormat": "40-60%, {{instance}}",
           "range": true,
           "refId": "C"
         },
@@ -950,7 +937,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket3_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket3, {{instance}}",
+          "legendFormat": "60-80%, {{instance}}",
           "range": true,
           "refId": "D"
         },
@@ -961,7 +948,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket4_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket4, {{instance}}",
+          "legendFormat": "80-85%, {{instance}}",
           "range": true,
           "refId": "E"
         },
@@ -972,7 +959,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket5_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket5, {{instance}}",
+          "legendFormat": "85-86%, {{instance}}",
           "range": true,
           "refId": "F"
         },
@@ -983,7 +970,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket6_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket6, {{instance}}",
+          "legendFormat": "86-87%, {{instance}}",
           "range": true,
           "refId": "G"
         },
@@ -994,7 +981,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket7_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket7, {{instance}}",
+          "legendFormat": "87-88%, {{instance}}",
           "range": true,
           "refId": "H"
         },
@@ -1005,7 +992,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket8_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket8, {{instance}}",
+          "legendFormat": "88-89%, {{instance}}",
           "range": true,
           "refId": "I"
         },
@@ -1016,7 +1003,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket9_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket9, {{instance}}",
+          "legendFormat": "89-90%, {{instance}}",
           "range": true,
           "refId": "J"
         },
@@ -1027,7 +1014,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket10_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket10, {{instance}}",
+          "legendFormat": "90-91%, {{instance}}",
           "range": true,
           "refId": "K"
         },
@@ -1038,7 +1025,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket11_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket11, {{instance}}",
+          "legendFormat": "91-92%, {{instance}}",
           "range": true,
           "refId": "L"
         },
@@ -1049,7 +1036,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket12_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket12, {{instance}}",
+          "legendFormat": "92-93%, {{instance}}",
           "range": true,
           "refId": "M"
         },
@@ -1060,7 +1047,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket13_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket13, {{instance}}",
+          "legendFormat": "93-94%, {{instance}}",
           "range": true,
           "refId": "N"
         },
@@ -1071,7 +1058,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket14_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket14, {{instance}}",
+          "legendFormat": "94-95%, {{instance}}",
           "range": true,
           "refId": "O"
         },
@@ -1082,14 +1069,14 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_defrag_fill_rate_bucket15_blocks{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket15, {{instance}}",
+          "legendFormat": "95-100%, {{instance}}",
           "range": true,
           "refId": "P"
         }
       ],
       "title": "Fill Rate Over Time",
       "type": "timeseries",
-      "description": "The same distribution over time, stacked. Weight migrating from the high buckets down to the low ones is fragmentation building up; the reverse is defragmentation winning."
+      "description": "The same distribution over time, stacked. Weight migrating down towards the coarse low buckets is fragmentation building up; the reverse is defragmentation winning."
     },
     {
       "datasource": {
@@ -1141,7 +1128,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1248,7 +1235,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1368,7 +1355,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1404,7 +1391,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_defrag_task_create_requests_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "expr": "rate(redis_engula_defrag_tasks_attempted_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
           "legendFormat": "Requested, {{instance}}",
           "range": true,
           "refId": "A"
@@ -1475,7 +1462,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1582,7 +1569,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1689,7 +1676,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1798,7 +1785,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1905,7 +1892,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2012,7 +1999,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2119,7 +2106,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2250,7 +2237,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2299,7 +2286,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_evict_urgent_defrag_wall_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "expr": "rate(redis_engula_evict_urgent_defrag_recycle_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
           "hide": false,
           "instant": false,
           "legendFormat": "evict_func,{{instance}}",
@@ -2361,7 +2348,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2457,7 +2444,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2553,7 +2540,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2598,6 +2585,220 @@
       "title": "Forecast Keys",
       "type": "timeseries",
       "description": "Keys the eviction forecaster has walked."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 71
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_inflow_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Inflow, {{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_reclaim_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Reclaim, {{instance}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_target_bytes_per_second{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "Target, {{instance}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Forecast Rates",
+      "type": "timeseries",
+      "description": "The forecast controller's own pacing state, not the instance's: `Inflow` and `Reclaim` are EWMAs rather than instantaneous rates, and all three read 0 while the forecast gate is shut — a flat zero here does not mean nothing is happening. `Target` is the reclaim rate it is steering towards."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisSoftMin": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 71
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "redis_engula_forecast_time_to_wall_seconds{namespace=~\"$namespace\", instance=~\"$instance\"}",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Time to Wall",
+      "type": "timeseries",
+      "description": "How long the controller projects until memory hits the wall. The server reports -1 while the forecast is inactive and the exporter drops negatives, so an inactive controller shows as a gap rather than as a value."
     }
   ],
   "refresh": "30s",

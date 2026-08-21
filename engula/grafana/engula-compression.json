@@ -130,7 +130,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -183,7 +183,7 @@
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": true,
-          "legendFormat": "bucket0",
+          "legendFormat": "0-10%",
           "range": false,
           "refId": "A",
           "useBackend": false
@@ -198,7 +198,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket1{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket1",
+          "legendFormat": "10-20%",
           "range": false,
           "refId": "B"
         },
@@ -212,7 +212,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket2{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket2",
+          "legendFormat": "20-30%",
           "range": false,
           "refId": "C"
         },
@@ -226,7 +226,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket3{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket3",
+          "legendFormat": "30-40%",
           "range": false,
           "refId": "D"
         },
@@ -240,7 +240,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket4{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket4",
+          "legendFormat": "40-50%",
           "range": false,
           "refId": "E"
         },
@@ -254,7 +254,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket5{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket5",
+          "legendFormat": "50-60%",
           "range": false,
           "refId": "F"
         },
@@ -268,7 +268,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket6{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket6",
+          "legendFormat": "60-70%",
           "range": false,
           "refId": "G"
         },
@@ -282,7 +282,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket7{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket7",
+          "legendFormat": "70-80%",
           "range": false,
           "refId": "H"
         },
@@ -296,7 +296,7 @@
           "expr": "redis_engula_ec_lines_nsize_bucket8{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket8",
+          "legendFormat": "80-90%",
           "range": false,
           "refId": "I"
         },
@@ -310,14 +310,14 @@
           "expr": "redis_engula_ec_lines_nsize_bucket9{namespace=~\"$namespace\", instance=~\"$instance\"}",
           "hide": false,
           "instant": true,
-          "legendFormat": "bucket9",
+          "legendFormat": "≥90%",
           "range": false,
           "refId": "J"
         }
       ],
       "title": "Current Line Sizes",
       "type": "bargauge",
-      "description": "Compressed lines grouped by how small they came out, right now. Series are labelled by bucket index: the server publishes 10 buckets and does not publish their boundaries."
+      "description": "Compressed lines grouped by how much of a zip batch their original record bytes fill (ec_calc_nsize_bucket_id_by_size: size * 10 / EA_ZIP_BATCH_SIZE, so 10% per bucket with the last one a catch-all). Lines below 50% are the ones rezip will not bother re-dictionarying."
     },
     {
       "datasource": {
@@ -369,7 +369,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -406,7 +406,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket0{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket0, {{instance}}",
+          "legendFormat": "0-10%, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -417,7 +417,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket1{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket1, {{instance}}",
+          "legendFormat": "10-20%, {{instance}}",
           "range": true,
           "refId": "B"
         },
@@ -428,7 +428,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket2{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket2, {{instance}}",
+          "legendFormat": "20-30%, {{instance}}",
           "range": true,
           "refId": "C"
         },
@@ -439,7 +439,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket3{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket3, {{instance}}",
+          "legendFormat": "30-40%, {{instance}}",
           "range": true,
           "refId": "D"
         },
@@ -450,7 +450,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket4{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket4, {{instance}}",
+          "legendFormat": "40-50%, {{instance}}",
           "range": true,
           "refId": "E"
         },
@@ -461,7 +461,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket5{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket5, {{instance}}",
+          "legendFormat": "50-60%, {{instance}}",
           "range": true,
           "refId": "F"
         },
@@ -472,7 +472,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket6{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket6, {{instance}}",
+          "legendFormat": "60-70%, {{instance}}",
           "range": true,
           "refId": "G"
         },
@@ -483,7 +483,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket7{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket7, {{instance}}",
+          "legendFormat": "70-80%, {{instance}}",
           "range": true,
           "refId": "H"
         },
@@ -494,7 +494,7 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket8{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket8, {{instance}}",
+          "legendFormat": "80-90%, {{instance}}",
           "range": true,
           "refId": "I"
         },
@@ -505,14 +505,14 @@
           },
           "editorMode": "code",
           "expr": "redis_engula_ec_lines_nsize_bucket9{namespace=~\"$namespace\", instance=~\"$instance\"}",
-          "legendFormat": "bucket9, {{instance}}",
+          "legendFormat": "≥90%, {{instance}}",
           "range": true,
           "refId": "J"
         }
       ],
       "title": "Line Sizes Over Time",
       "type": "timeseries",
-      "description": "The same distribution over time, stacked. Weight moving towards the larger buckets means compression is getting less out of the data."
+      "description": "The same distribution over time, stacked."
     },
     {
       "datasource": {
@@ -564,7 +564,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -671,7 +671,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -791,7 +791,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -887,7 +887,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -994,7 +994,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1090,7 +1090,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1199,7 +1199,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1306,7 +1306,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1342,8 +1342,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_zip_completion_old_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Old, {{instance}}",
+          "expr": "rate(redis_engula_zip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Retired, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -1353,15 +1353,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_zip_completion_new_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "New, {{instance}}",
+          "expr": "rate(redis_engula_zip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Produced, {{instance}}",
           "range": true,
           "refId": "B"
         }
       ],
       "title": "Zip Block Bytes",
       "type": "timeseries",
-      "description": "The same passes measured in bytes. `New` below `Old` is the space compression recovers at block level."
+      "description": "Bytes consumed and written back by compression passes, at block level. These are the user-tier `engula_zip_{retired,produced}_bytes_total`; the record-level detail next to it stays in the developer tier."
     },
     {
       "datasource": {
@@ -1413,7 +1413,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1520,7 +1520,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1640,7 +1640,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1747,7 +1747,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1783,8 +1783,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_rezip_completion_old_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "Old, {{instance}}",
+          "expr": "rate(redis_engula_rezip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Retired, {{instance}}",
           "range": true,
           "refId": "A"
         },
@@ -1794,15 +1794,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_rezip_completion_new_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
-          "legendFormat": "New, {{instance}}",
+          "expr": "rate(redis_engula_rezip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "legendFormat": "Produced, {{instance}}",
           "range": true,
           "refId": "B"
         }
       ],
       "title": "Rezip Block Bytes",
       "type": "timeseries",
-      "description": "Recompression measured in bytes at block level."
+      "description": "Recompression at block level, from the user-tier `engula_rezip_{retired,produced}_bytes_total`."
     },
     {
       "datasource": {
@@ -1854,7 +1854,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1961,7 +1961,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2081,7 +2081,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2117,7 +2117,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_zip_completion_new_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / (rate(redis_engula_ec_zip_completion_old_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) > 0)",
+          "expr": "rate(redis_engula_zip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / (rate(redis_engula_zip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) > 0)",
           "legendFormat": "Zip, {{instance}}",
           "range": true,
           "refId": "A"
@@ -2128,7 +2128,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_rezip_completion_new_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / (rate(redis_engula_ec_rezip_completion_old_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) > 0)",
+          "expr": "rate(redis_engula_rezip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) / (rate(redis_engula_rezip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) > 0)",
           "legendFormat": "Rezip, {{instance}}",
           "range": true,
           "refId": "B"
@@ -2188,7 +2188,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2224,7 +2224,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_zip_completion_old_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) - rate(redis_engula_ec_zip_completion_new_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "expr": "rate(redis_engula_zip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) - rate(redis_engula_zip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
           "legendFormat": "Zip, {{instance}}",
           "range": true,
           "refId": "A"
@@ -2235,7 +2235,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_ec_rezip_completion_old_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) - rate(redis_engula_ec_rezip_completion_new_block_size_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "expr": "rate(redis_engula_rezip_retired_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval]) - rate(redis_engula_rezip_produced_bytes_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
           "legendFormat": "Rezip, {{instance}}",
           "range": true,
           "refId": "B"
@@ -2295,7 +2295,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2402,7 +2402,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2438,7 +2438,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(redis_engula_compress_encode_errors_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
+          "expr": "rate(redis_engula_ec_encode_errors_total{namespace=~\"$namespace\", instance=~\"$instance\"}[$__rate_interval])",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
